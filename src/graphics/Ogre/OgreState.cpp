@@ -78,5 +78,6 @@ void OgreState::onRun()
 	// Capture the inputs
 	OisFrameworkSingleton.capture();
 	// Render one frame of Ogre and pop all state if fail
-	if (!OgreFrameworkSingleton.getRoot()->renderOneFrame()) stop();
+	if (!OgreFrameworkSingleton.getRoot()->renderOneFrame())
+		stop();
 }

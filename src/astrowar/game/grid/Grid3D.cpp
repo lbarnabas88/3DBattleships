@@ -35,8 +35,7 @@ Grid3DListener::~Grid3DListener()
 //**************************/
 char sId = 'A';
 
-void createGridOneDirection(Ogre::ManualObject* shape, Ogre::Vector3 a, Ogre::Vector3 b, Ogre::Vector3 c, size_t na, size_t nb, Ogre::Vector3 offset,
-		Ogre::ColourValue colour)
+void createGridOneDirection(Ogre::ManualObject* shape, Ogre::Vector3 a, Ogre::Vector3 b, Ogre::Vector3 c, size_t na, size_t nb, Ogre::Vector3 offset, Ogre::ColourValue colour)
 {
 	// Assert if shape is NULL
 	assert(shape != NULL);
@@ -62,16 +61,12 @@ Grid3D::Grid3D(Ogre::SceneManager* scene_manager, Ogre::Camera* camera, std::vec
 	// Create the manual object for grid
 	mGridShape = mSceneManager->createManualObject(string("Grid") + sId);
 	// Create the grid
-	mOffset = Ogre::Vector3::NEGATIVE_UNIT_X * mDimensions[0] / 2.0 + Ogre::Vector3::NEGATIVE_UNIT_Y * mDimensions[1] / 2.0
-			+ Ogre::Vector3::NEGATIVE_UNIT_Z * mDimensions[2] / 2.0;
+	mOffset = Ogre::Vector3::NEGATIVE_UNIT_X * mDimensions[0] / 2.0 + Ogre::Vector3::NEGATIVE_UNIT_Y * mDimensions[1] / 2.0 + Ogre::Vector3::NEGATIVE_UNIT_Z * mDimensions[2] / 2.0;
 	mGridShape->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_LIST);
 	{
-		createGridOneDirection(mGridShape, Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Y, mDimensions[2] * Ogre::Vector3::UNIT_Z, mDimensions[0], mDimensions[1],
-				mOffset, colour);
-		createGridOneDirection(mGridShape, Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Z, mDimensions[1] * Ogre::Vector3::UNIT_Y, mDimensions[0], mDimensions[2],
-				mOffset, colour);
-		createGridOneDirection(mGridShape, Ogre::Vector3::UNIT_Y, Ogre::Vector3::UNIT_Z, mDimensions[0] * Ogre::Vector3::UNIT_X, mDimensions[1], mDimensions[2],
-				mOffset, colour);
+		createGridOneDirection(mGridShape, Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Y, mDimensions[2] * Ogre::Vector3::UNIT_Z, mDimensions[0], mDimensions[1], mOffset, colour);
+		createGridOneDirection(mGridShape, Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Z, mDimensions[1] * Ogre::Vector3::UNIT_Y, mDimensions[0], mDimensions[2], mOffset, colour);
+		createGridOneDirection(mGridShape, Ogre::Vector3::UNIT_Y, Ogre::Vector3::UNIT_Z, mDimensions[0] * Ogre::Vector3::UNIT_X, mDimensions[1], mDimensions[2], mOffset, colour);
 	}
 	mGridShape->end();
 
@@ -127,6 +122,12 @@ Ogre::Vector3 Grid3D::coords2position(std::vector<size_t> coords)
 	return mOffset + coords[0] * Vector3::UNIT_X + coords[1] * Vector3::UNIT_Y + coords[2] * Vector3::UNIT_Z + Vector3(0.5f, 0.5f, 0.5f);
 }
 
+std::vector<size_t> Grid3D::position2coords(Ogre::Vector3 position)
+{
+	Ogre::Vector3 P0 = position - mOffset - Vector3(0.5f, 0.5f, 0.5f);
+	return std::vector<size_t>( { (size_t) P0.x, (size_t) P0.y, (size_t) P0.z });
+}
+
 void Grid3D::markerMoveTo(std::vector<size_t> coords)
 {
 	assert(coords.size() >= 3);
@@ -164,10 +165,14 @@ void Grid3D::markerStep(size_t direction, int numberOfSteps)
 
 bool Grid3D::keyPressed(const OIS::KeyEvent& keyEvent)
 {
-	if (!isActive()) return true;
-	if (keyEvent.key == OIS::KC_NUMPAD4 || keyEvent.key == OIS::KC_NUMPAD6) markerStep(0, keyEvent.key == OIS::KC_NUMPAD4 ? -1 : 1);
-	if (keyEvent.key == OIS::KC_NUMPAD9 || keyEvent.key == OIS::KC_NUMPAD3) markerStep(1, keyEvent.key == OIS::KC_NUMPAD3 ? -1 : 1);
-	if (keyEvent.key == OIS::KC_NUMPAD8 || keyEvent.key == OIS::KC_NUMPAD2) markerStep(2, keyEvent.key == OIS::KC_NUMPAD8 ? -1 : 1);
+	if (!isActive())
+		return true;
+	if (keyEvent.key == OIS::KC_NUMPAD4 || keyEvent.key == OIS::KC_NUMPAD6)
+		markerStep(0, keyEvent.key == OIS::KC_NUMPAD4 ? -1 : 1);
+	if (keyEvent.key == OIS::KC_NUMPAD9 || keyEvent.key == OIS::KC_NUMPAD3)
+		markerStep(1, keyEvent.key == OIS::KC_NUMPAD3 ? -1 : 1);
+	if (keyEvent.key == OIS::KC_NUMPAD8 || keyEvent.key == OIS::KC_NUMPAD2)
+		markerStep(2, keyEvent.key == OIS::KC_NUMPAD8 ? -1 : 1);
 
 	return true;
 }
@@ -220,11 +225,13 @@ bool Grid3D::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 						// Determine the clicked side
 						size_t side = 0;
 						for (size_t i = 0; i < point.size(); ++i)
-							if (fabsf(point[i]) > fabsf(point[side])) side = i;
+							if (fabsf(point[i]) > fabsf(point[side]))
+								side = i;
 						// Calc the new coordinates
 						for (size_t i = 0; i < point.size(); ++i)
 						{
-							if (i == side) continue;
+							if (i == side)
+								continue;
 							size_t coord = mDimensions[i] * (point[i] + 1) / 2;
 							markerStepTo(i, coord);
 						}
@@ -267,11 +274,13 @@ bool Grid3D::queryResult(Ogre::MovableObject* obj, Ogre::Real distance)
 			// Determine the clicked side
 			size_t side = 0;
 			for (size_t i = 0; i < point.size(); ++i)
-				if (fabsf(point[i]) > fabsf(point[side])) side = i;
+				if (fabsf(point[i]) > fabsf(point[side]))
+					side = i;
 			// Calc the new coordinates
 			for (size_t i = 0; i < point.size(); ++i)
 			{
-				if (i == side) continue;
+				if (i == side)
+					continue;
 				size_t coord = mDimensions[i] * (point[i] + 1) / 2;
 				markerStepTo(i, coord);
 			}
@@ -289,7 +298,8 @@ bool Grid3D::queryResult(Ogre::SceneQuery::WorldFragment* fragment, Ogre::Real d
 // Do select
 void Grid3D::processSelected()
 {
-	if (mGridListener) mGridListener->onSelect(this, mMarkerCoords[0], mMarkerCoords[1], mMarkerCoords[2]);
+	if (mGridListener)
+		mGridListener->onSelect(this, mMarkerCoords[0], mMarkerCoords[1], mMarkerCoords[2]);
 }
 
 // Get Set Listener
@@ -327,6 +337,7 @@ bool Grid3D::isActive() const
 void Grid3D::setActive(bool isActive)
 {
 	mIsActive = isActive;
+	mSceneNode->setVisible(isActive);
 }
 
 void Grid3D::activate()
@@ -337,4 +348,10 @@ void Grid3D::activate()
 void Grid3D::deactivate()
 {
 	setActive(false);
+}
+
+// Getter of dimensions
+std::vector<size_t> Grid3D::getDimensions() const
+{
+	return mDimensions;
 }

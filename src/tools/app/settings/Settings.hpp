@@ -150,7 +150,8 @@ T Settings::getOption(std::string name) const       // Get the value
 		catch (...)
 		{
 			findIt = m_defaults.find(name);
-			if (findIt != m_defaults.end()) return findIt->second.as<T>();
+			if (findIt != m_defaults.end())
+				return findIt->second.as<T>();
 		}
 	}
 	return T();
@@ -160,7 +161,8 @@ template<typename T>
 T Settings::getDefault(std::string name) const
 {
 	auto fintIt = m_defaults.find(name);
-	if (fintIt != m_defaults.end()) return fintIt->second.as<T>();
+	if (fintIt != m_defaults.end())
+		return fintIt->second.as<T>();
 	return T();
 }
 

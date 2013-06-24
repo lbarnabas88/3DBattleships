@@ -39,6 +39,7 @@ public:
 	void update(Ogre::Real dt);
 
 	Ogre::Vector3 coords2position(std::vector<size_t> coords);
+	std::vector<size_t> position2coords(Ogre::Vector3 position);
 
 	// Marker movers
 	void markerMoveTo(std::vector<size_t> coords);
@@ -69,6 +70,8 @@ public:
 	void setActive(bool isActive);
 	void activate();
 	void deactivate();
+	// Getter of dimensions
+	std::vector<size_t> getDimensions() const;
 protected:
 	// Reference to the scene manager and camera
 	Ogre::SceneManager* mSceneManager;

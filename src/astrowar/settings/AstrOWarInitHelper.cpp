@@ -73,7 +73,8 @@ unsigned AstrOWarInitHelper::getWindowHnd()
 void AstrOWarInitHelper::bootstrapRenderer()
 {
 	Ogre::RenderWindow* window = OgreFrameworkSingleton.getRenderWindow();
-	if (window) CEGUI::OgreRenderer::bootstrapSystem(*window);
+	if (window)
+		CEGUI::OgreRenderer::bootstrapSystem(*window);
 }
 // Cegui log
 CEGUI::String AstrOWarInitHelper::getCeguiLog()

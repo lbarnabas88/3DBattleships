@@ -72,7 +72,8 @@ bool OisOgreWindowListener::keyPressed(const OIS::KeyEvent &arg)
 	if (arg.key == OIS::KC_RETURN)
 	{
 		auto keyboard = OisFrameworkSingleton.getKeyboard();
-		if (keyboard->isModifierDown(OIS::Keyboard::Alt)) OgreFrameworkSingleton.toggleFullscreen();
+		if (keyboard->isModifierDown(OIS::Keyboard::Alt))
+			OgreFrameworkSingleton.toggleFullscreen();
 	}
 	return true;
 }

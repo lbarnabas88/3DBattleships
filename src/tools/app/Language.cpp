@@ -30,7 +30,8 @@ public:
 	{
 		if (p_lineNumber == 0)
 			m_state = Header;
-		else if (p_lineNumber > 0) m_state = CodeLine;
+		else if (p_lineNumber > 0)
+			m_state = CodeLine;
 	}
 	// Run on every cell
 	void onReadField(std::string p_field, int p_fieldNumber)
@@ -40,7 +41,8 @@ public:
 			if (p_fieldNumber > 0)
 			{
 				m_langCodes.push_back(p_field);
-				if (p_field == m_langCode) m_langColumn = p_fieldNumber;
+				if (p_field == m_langCode)
+					m_langColumn = p_fieldNumber;
 			}
 		}
 		else if (m_state == LangName)
@@ -122,7 +124,8 @@ bool Language::loadFromString(std::string p_content)
 std::string Language::textForCode(std::string p_code) const
 {
 	auto fintIt = m_dictionary.find(p_code);
-	if (fintIt != m_dictionary.end()) return fintIt->second;
+	if (fintIt != m_dictionary.end())
+		return fintIt->second;
 	return "<!" + p_code + "!>";
 }
 
@@ -142,14 +145,16 @@ const std::list<std::pair<std::string, std::string> > Language::getLanguageList(
 bool Language::isTranslationExtist(std::string code) const
 {
 	for (auto lang : m_languages)
-		if (lang.first == code) return true;
+		if (lang.first == code)
+			return true;
 	return false;
 }
 
 std::string Language::getLangName(std::string code) const
 {
 	for (auto lang : m_languages)
-		if (lang.first == code) return lang.second;
+		if (lang.first == code)
+			return lang.second;
 	return "";
 }
 

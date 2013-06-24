@@ -23,6 +23,8 @@ multi.client.start	Connect	Kapcsolódás
 multi.server.waitingtitle	Waiting for client	Várakozás a kliensre
 multi.client.waitingtitle	Connecting to server	Csatlakozás a szervezhez
 game.menu.title	Menu	Menü
+game.control.set	Set Ship	Hajó Lerakás
+game.control.ready	Ready	Kész
 game.control.fire	Fire	Tűz
 game.ships.name	Ships	Hajók
 game.ships.quantity	q	db

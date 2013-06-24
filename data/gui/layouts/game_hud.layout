@@ -43,7 +43,6 @@
 				<Property Name="UnifiedPosition" Value="{{0,0},{0.1,0}}" />
 				<Property Name="UnifiedSize" Value="{{1,0},{0.9,0}}" />
 				<Property Name="Text" Value="@game.player.ships" />
-				<Property Name="MultiSelect" Value="false" />
 				<Property Name="ColumnsSizable" Value="false" />
 				<Property Name="ColumnsMovable" Value="false" />
 			</Window>
@@ -58,16 +57,48 @@
 				<Property Name="UnifiedSize" Value="{{1,0},{0.1,0}}" />
 				<Property Name="Text" Value="PLAYER NAME B" />
 			</Window>
+			<!-- Player 2 Ship List -->
+			<Window Name="Game/Player2Panel/ShipList" Type="TaharezLook/MultiColumnList">
+				<Property Name="UnifiedPosition" Value="{{0,0},{0.1,0}}" />
+				<Property Name="UnifiedSize" Value="{{1,0},{0.9,0}}" />
+				<Property Name="Text" Value="@game.player.ships" />
+				<Property Name="ColumnsSizable" Value="false" />
+				<Property Name="ColumnsMovable" Value="false" />
+			</Window>
 		</Window>
 		<!-- Panel for control buttons -->
 		<Window Name="Game/Control" Type="DefaultWindow">
 			<Property Name="UnifiedPosition" Value="{{0.8,-10},{0.84,-10}}" />
 			<Property Name="UnifiedSize" Value="{{0.2,0},{0.16,0}}" />
-			<!-- Fire button -->
-			<Window Name="Game/Control/FireButton" Type="TaharezLook/Button">
-				<Property Name="UnifiedPosition" Value="{{0,0},{0.5,0}}" />
-				<Property Name="UnifiedSize" Value="{{1,0},{0.5,0}}" />
-				<Property Name="Text" Value="@game.control.fire" />
+			<!-- Set Control Panel -->
+			<Window Name="Game/Control/Set" Type="DefaultWindow">
+				<Property Name="UnifiedPosition" Value="{{0,0},{0,0}}" />
+				<Property Name="UnifiedSize" Value="{{1,0},{1,0}}" />
+				<!-- Set Ship Button -->
+				<Window Name="Game/Control/Set/SetButton" Type="TaharezLook/Button">
+					<Property Name="UnifiedPosition" Value="{{0,0},{0,0}}" />
+					<Property Name="UnifiedSize" Value="{{1,0},{0.48,0}}" />
+					<Property Name="Text" Value="@game.control.set" />
+				</Window>
+				<!-- Ready Set Button -->
+				<Window Name="Game/Control/Set/ReadyButton" Type="TaharezLook/Button">
+					<Property Name="UnifiedPosition" Value="{{0,0},{0.52,0}}" />
+					<Property Name="UnifiedSize" Value="{{1,0},{0.48,0}}" />
+					<Property Name="Text" Value="@game.control.ready" />
+					<Property Name="Disabled" Value="true" />
+				</Window>
+			</Window>
+			<!-- Battle Control Panel -->
+			<Window Name="Game/Control/Battle" Type="DefaultWindow">
+				<Property Name="UnifiedPosition" Value="{{0,0},{0,0}}" />
+				<Property Name="UnifiedSize" Value="{{1,0},{1,0}}" />
+				<Property Name="Visible" Value="false" />
+				<!-- Fire Button -->
+				<Window Name="Game/Control/Battle/FireButton" Type="TaharezLook/Button">
+					<Property Name="UnifiedPosition" Value="{{0,0},{0.5,0}}" />
+					<Property Name="UnifiedSize" Value="{{1,0},{0.5,0}}" />
+					<Property Name="Text" Value="@game.control.fire" />
+				</Window>
 			</Window>
 		</Window>
 	</Window>

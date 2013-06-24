@@ -19,7 +19,8 @@ using namespace std;
  */
 void Main::pushState(const State::Ptr newState)
 {
-	if (!newState) return;
+	if (!newState)
+		return;
 	m_states.push(newState);
 }
 
@@ -30,8 +31,10 @@ void Main::pushState(const State::Ptr newState)
  */
 void Main::replaceState(const State::Ptr newState)
 {
-	if (!newState) return;
-	if (!m_states.empty()) m_states.pop();
+	if (!newState)
+		return;
+	if (!m_states.empty())
+		m_states.pop();
 	pushState(newState);
 }
 
@@ -40,7 +43,8 @@ void Main::replaceState(const State::Ptr newState)
  */
 void Main::popState()
 {
-	if (!m_states.empty()) m_states.pop();
+	if (!m_states.empty())
+		m_states.pop();
 }
 
 /**
@@ -50,7 +54,8 @@ void Main::stop()
 {
 	mRunning = false;
 
-	if (!m_states.empty()) m_states.top()->onDeactivate();
+	if (!m_states.empty())
+		m_states.top()->onDeactivate();
 	while (!m_states.empty())
 	{
 		m_states.pop();
@@ -108,13 +113,16 @@ void Main::updateState()
 	State::Ptr actState;
 
 	// Set the actual state
-	if (!m_states.empty()) actState = m_states.top();
+	if (!m_states.empty())
+		actState = m_states.top();
 
 	// Run the corresponding functions
 	if (mRunning && s_prev_state != actState)
 	{
-		if (s_prev_state) s_prev_state->onDeactivate();
-		if (actState) actState->onActivate();
+		if (s_prev_state)
+			s_prev_state->onDeactivate();
+		if (actState)
+			actState->onActivate();
 	}
 
 	// Set the previous state!

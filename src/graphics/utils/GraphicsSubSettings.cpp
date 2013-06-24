@@ -30,7 +30,8 @@ GraphicsSubSettings::~GraphicsSubSettings()
 GraphicsSubSettings::ResolutionType GraphicsSubSettings::getResolution() const
 {
 	string resString = getOption<std::string>("gui.resolution");
-	if (!utils::isResolution(resString)) resString = getDefault<std::string>("gui.resolution");
+	if (!utils::isResolution(resString))
+		resString = getDefault<std::string>("gui.resolution");
 	return utils::str2res(resString);
 }
 

@@ -58,7 +58,8 @@ void AOWMainMenuState::onActivate()
 	translateCeguiWindow(guiSys.getGUISheet());
 	// Exit Button
 	CEGUI::PushButton* exitButton = static_cast<CEGUI::PushButton*>(guiSys.getGUISheet()->getChildRecursive("MainMenu/Menu/ExitButton"));
-	if (exitButton) exitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&AOWMainMenuState::exitButtonHandler, this));
+	if (exitButton)
+		exitButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&AOWMainMenuState::exitButtonHandler, this));
 	// Server Start Button
 	CEGUI::PushButton* serverStartButton = static_cast<CEGUI::PushButton*>(guiSys.getGUISheet()->getChildRecursive("MainMenu/ServerPanel/StartButton"));
 	if (serverStartButton)

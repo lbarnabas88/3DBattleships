@@ -32,7 +32,8 @@ public:
 	template<typename Iter>
 	bool parse(Iter iBegin, Iter iEend)
 	{
-		if (!m_delegate) return false;
+		if (!m_delegate)
+			return false;
 
 		m_delegate->onStartDocument(m_docName);
 
@@ -96,7 +97,8 @@ private:
 	{
 		if (c == m_delimiter)
 		{
-			if (m_needNewLine) sendStartLine();
+			if (m_needNewLine)
+				sendStartLine();
 			sendActField();
 		}
 		else if (c == '\n')
@@ -117,7 +119,8 @@ private:
 		}
 		else
 		{
-			if (m_needNewLine) sendStartLine();
+			if (m_needNewLine)
+				sendStartLine();
 			m_actField += c;
 		}
 	}
@@ -191,7 +194,8 @@ private:
 bool parseFile(std::string filename, ParseDelegate::Ptr pDelegate, char delimiter)
 {
 	ifstream fin(filename.c_str());
-	if (!fin.is_open()) return false;
+	if (!fin.is_open())
+		return false;
 	fin.unsetf(ios::skipws);
 
 	Parser parser(filename, pDelegate, delimiter);

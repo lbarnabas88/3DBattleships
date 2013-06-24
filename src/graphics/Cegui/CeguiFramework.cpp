@@ -42,7 +42,8 @@ CeguiFramework::~CeguiFramework()
 void CeguiFramework::init(CeguiFrameworkInitHelper* initHelper)
 {
 	// If is inited not init
-	if (mIsInited) return;
+	if (mIsInited)
+		return;
 	// initHelper musn't be nil
 	assert(initHelper);
 	// Create default logger with the given file name

@@ -15,6 +15,7 @@
 #include "grid/Grid3D.hpp"
 #include "control/GameCoordinator.hpp"
 #include "control/GameControlProvider.hpp"
+#include "control/GameControl.hpp"
 #include "shipyard/Shipyard.hpp"
 // Network
 #include <SFML/Network.hpp>
@@ -45,10 +46,6 @@ protected:
 	bool keyReleased(const OIS::KeyEvent &arg);
 	// CEGUI handlers
 	bool backButtonHandler(const CEGUI::EventArgs& arg);
-	// Grid management
-	void onGridActivate(Grid3D* grid);
-	void onGridDeactivate(Grid3D* grid);
-	void toggleGrids();
 	// Torpedo
 	std::shared_ptr<Grid3D> gridA, gridB;
 	// Camera
@@ -56,10 +53,10 @@ protected:
 	Ogre::SceneNode* mCameraNode;
 	// Players
 	sf::Socket* mNetPlayerSocket;
+	// Game control
+	GameControl* mControl;
 	// Game coordinator
-	GameCoordinator mCoordinator;
-	// Game State Provider
-	GameControlProvider* mControlProvider;
+	GameCoordinator* mCoordinator;
 };
 
 #endif /* GAMESTATE_HPP_ */

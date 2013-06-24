@@ -80,7 +80,8 @@ void OgreFramework::init(OgreFrameworkInitHelper* initHelper)
 	// The helper is null?
 	bool isHelperNull = initHelper == NULL;
 	// In the case of nullhelper create default
-	if (isHelperNull) initHelper = new OgreFrameworkInitHelper;
+	if (isHelperNull)
+		initHelper = new OgreFrameworkInitHelper;
 	//*** INIT OGRE ***/
 	// Create root
 	mRoot = new Ogre::Root(initHelper->getPluginsCfg(), "", initHelper->getOgreLog());
@@ -118,7 +119,8 @@ void OgreFramework::init(OgreFrameworkInitHelper* initHelper)
 	Ogre::ResourceGroupManager::getSingleton().initialiseAllResourceGroups();
 	//*** INIT HELPER DESTROY ***/
 	// In the case of nullhelper destroy default
-	if (isHelperNull) delete initHelper;
+	if (isHelperNull)
+		delete initHelper;
 }
 
 // Shut down

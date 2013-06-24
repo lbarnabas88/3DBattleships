@@ -40,7 +40,8 @@ OisFramework::~OisFramework()
 void OisFramework::init(OisFrameworkInitHelper* initHelper)
 {
 	// If initHelper is nil, stop
-	if (!initHelper) return;
+	if (!initHelper)
+		return;
 	// Shut down the previous init
 	shutdown();
 	// Param list
@@ -66,10 +67,12 @@ void OisFramework::init(OisFrameworkInitHelper* initHelper)
 	mInputManager = OIS::InputManager::createInputSystem(pl);
 	// Create Keyboard
 	mKeyboard = static_cast<OIS::Keyboard*>(mInputManager->createInputObject(OIS::OISKeyboard, true));
-	if (mKeyboard) mKeyboard->setEventCallback(this);
+	if (mKeyboard)
+		mKeyboard->setEventCallback(this);
 	// Create Mouse
 	mMouse = static_cast<OIS::Mouse*>(mInputManager->createInputObject(OIS::OISMouse, true));
-	if (mMouse) mMouse->setEventCallback(this);
+	if (mMouse)
+		mMouse->setEventCallback(this);
 	// Create joysticks
 	for (int i = 0; i < mInputManager->getNumberOfDevices(OIS::OISJoyStick); ++i)
 	{
@@ -132,7 +135,8 @@ OIS::Mouse* OisFramework::getMouse()
 }
 OIS::JoyStick* OisFramework::getJoystick(size_t i)
 {
-	if (i < getNumOfJoysticks()) return mJoySticks[i];
+	if (i < getNumOfJoysticks())
+		return mJoySticks[i];
 	return NULL;
 }
 size_t OisFramework::getNumOfJoysticks()
@@ -215,37 +219,46 @@ bool OisFramework::vector3Moved(const OIS::JoyStickEvent &arg, int index)
 // Add listener
 void OisFramework::addKeyListener(OIS::KeyListener* keyListener)
 {
-	if (!keyListener) return;
-	if (std::find(mKeyListeners.begin(), mKeyListeners.end(), keyListener) != mKeyListeners.end()) return;
+	if (!keyListener)
+		return;
+	if (std::find(mKeyListeners.begin(), mKeyListeners.end(), keyListener) != mKeyListeners.end())
+		return;
 	mKeyListeners.push_back(keyListener);
 }
 void OisFramework::addMouseListener(OIS::MouseListener* mouseListener)
 {
-	if (!mouseListener) return;
-	if (std::find(mMouseListeners.begin(), mMouseListeners.end(), mouseListener) != mMouseListeners.end()) return;
+	if (!mouseListener)
+		return;
+	if (std::find(mMouseListeners.begin(), mMouseListeners.end(), mouseListener) != mMouseListeners.end())
+		return;
 	mMouseListeners.push_back(mouseListener);
 }
 void OisFramework::addJoyStickListener(OIS::JoyStickListener* joystickListener)
 {
-	if (!joystickListener) return;
-	if (std::find(mJoyStickListeners.begin(), mJoyStickListeners.end(), joystickListener) != mJoyStickListeners.end()) return;
+	if (!joystickListener)
+		return;
+	if (std::find(mJoyStickListeners.begin(), mJoyStickListeners.end(), joystickListener) != mJoyStickListeners.end())
+		return;
 	mJoyStickListeners.push_back(joystickListener);
 }
 // Remove listener
 void OisFramework::removeKeyListener(OIS::KeyListener* keyListener)
 {
 	auto findIt = std::find(mKeyListeners.begin(), mKeyListeners.end(), keyListener);
-	if (findIt != mKeyListeners.end()) mKeyListeners.erase(findIt);
+	if (findIt != mKeyListeners.end())
+		mKeyListeners.erase(findIt);
 }
 void OisFramework::removeMouseListener(OIS::MouseListener* mouseListener)
 {
 	auto findIt = std::find(mMouseListeners.begin(), mMouseListeners.end(), mouseListener);
-	if (findIt != mMouseListeners.end()) mMouseListeners.erase(findIt);
+	if (findIt != mMouseListeners.end())
+		mMouseListeners.erase(findIt);
 }
 void OisFramework::removeJoyStickListener(OIS::JoyStickListener* joystickListener)
 {
 	auto findIt = std::find(mJoyStickListeners.begin(), mJoyStickListeners.end(), joystickListener);
-	if (findIt != mJoyStickListeners.end()) mJoyStickListeners.erase(findIt);
+	if (findIt != mJoyStickListeners.end())
+		mJoyStickListeners.erase(findIt);
 }
 // Remove all listener
 void OisFramework::removeAllListeners()

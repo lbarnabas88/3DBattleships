@@ -158,7 +158,8 @@ public:
 		cout << "State #" << mI << " running #" << i << endl;
 		if (mI < 3 && i == 3)
 			pushState(app::State::Ptr(new DumpState(mI + 1)));
-		else if (i >= 4) stop();
+		else if (i >= 4)
+			stop();
 		++i;
 	}
 private:

@@ -11,7 +11,8 @@
 void translateCeguiWindow(CEGUI::Window* ceguiWindow, bool isRecursive)
 {
 	// If null return
-	if (!ceguiWindow) return;
+	if (!ceguiWindow)
+		return;
 	// Translate
 	CEGUI::String text = ceguiWindow->getText();
 	if (text.length() > 0 && text[0] == '@')
@@ -20,6 +21,7 @@ void translateCeguiWindow(CEGUI::Window* ceguiWindow, bool isRecursive)
 		ceguiWindow->setText(utf8ToCeguiString(GameSettingsSingleton.getLanguage().textForCode(code)));
 	}
 	// Recursive for all children
-	if (isRecursive) for (size_t i = 0; i < ceguiWindow->getChildCount(); ++i)
-		translateCeguiWindow(ceguiWindow->getChildAtIdx(i));
+	if (isRecursive)
+		for (size_t i = 0; i < ceguiWindow->getChildCount(); ++i)
+			translateCeguiWindow(ceguiWindow->getChildAtIdx(i));
 }

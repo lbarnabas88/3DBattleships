@@ -26,21 +26,28 @@ Shipyard::~Shipyard()
 // Ship
 void Shipyard::registerShipType(std::string shipTypeName, ShipTypeDescription shipTypeDescription)
 {
-	mShipTypes[shipTypeName] = shipTypeDescription;
+	mShipTypes.push_back(std::make_pair(shipTypeName, shipTypeDescription));
 }
 
-ShipHull* Shipyard::createShip(std::string shipTypeName, Ogre::SceneNode* parentNode)
+ShipHull* Shipyard::createShip(std::string shipTypeName, Grid3D* grid)
 {
 	// Ship number
 	static int shipNumber = 0;
 	// New ship hull
 	ShipHull* newShip = new ShipHull;
 	// Get definition
-	auto description = mShipTypes[shipTypeName];
+	auto shipTypeIt = mShipTypes.begin();
+	for (; shipTypeIt != mShipTypes.end(); ++shipTypeIt)
+		if (shipTypeIt->first == shipTypeName)
+			break;
+	if (shipTypeIt == mShipTypes.end())
+		return NULL;
+	auto description = shipTypeIt->second;
 	// Create newShip stuff
-	newShip->mSceneNode = parentNode->createChildSceneNode("Ship" + utils::t2str(shipNumber++));
+	newShip->mSceneNode = grid->getNode()->createChildSceneNode("Ship" + utils::t2str(shipNumber++));
 	newShip->mEntity = mSceneManager->createEntity(description.meshFilePath);
 	newShip->mSceneNode->attachObject(newShip->mEntity);
+	newShip->mGrid = grid;
 	// Add new ship to the collection
 	mShips.push_back(newShip);
 	// Return the new ship
@@ -49,16 +56,31 @@ ShipHull* Shipyard::createShip(std::string shipTypeName, Ogre::SceneNode* parent
 
 void Shipyard::destroyShip(ShipHull* ship)
 {
-	if (!ship) return;
+	if (!ship)
+		return;
 	mSceneManager->destroyEntity(ship->mEntity);
 	ship->mSceneNode->getParentSceneNode()->removeChild(ship->mSceneNode);
 	auto fintIt = std::find(mShips.begin(), mShips.end(), ship);
-	if (fintIt != mShips.end()) mShips.erase(fintIt);
+	if (fintIt != mShips.end())
+		mShips.erase(fintIt);
+}
+
+size_t Shipyard::getNumberOfShipTypes() const
+{
+	return mShipTypes.size();
+}
+
+std::string Shipyard::getNameOfShipType(size_t i) const
+{
+	if (i >= mShipTypes.size())
+		return "";
+	return mShipTypes[i].first;
 }
 
 ShipHull* Shipyard::getShip(Ogre::SceneNode* sceneNode)
 {
 	for (auto ship : mShips)
-		if (ship->getNode() == sceneNode) return ship;
+		if (ship->getNode() == sceneNode)
+			return ship;
 	return NULL;
 }

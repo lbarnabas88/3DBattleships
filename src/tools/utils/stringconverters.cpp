@@ -36,7 +36,8 @@ wstring utf8ToWString(string rSource)
 			{
 				w = ((w << 6) | (c & 0x3f));
 				bytes--;
-				if (bytes == 0) dest.push_back(w);
+				if (bytes == 0)
+					dest.push_back(w);
 			}
 			else
 				dest.push_back(err);
@@ -62,7 +63,8 @@ wstring utf8ToWString(string rSource)
 			bytes = 0;
 		}
 	}
-	if (bytes) dest.push_back(err);
+	if (bytes)
+		dest.push_back(err);
 	return dest;
 }
 

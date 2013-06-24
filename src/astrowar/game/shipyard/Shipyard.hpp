@@ -14,6 +14,7 @@
 #include <OGRE/Ogre.h>
 // Game
 #include "ShipHull.hpp"
+#include "../grid/Grid3D.hpp"
 
 class Shipyard
 {
@@ -29,12 +30,14 @@ public:
 	virtual ~Shipyard();
 	// Ship
 	void registerShipType(std::string shipTypeName, ShipTypeDescription shipTypeDescription);
-	ShipHull* createShip(std::string shipTypeName, Ogre::SceneNode* parentNode);
+	ShipHull* createShip(std::string shipTypeName, Grid3D* grid);
 	void destroyShip(ShipHull* ship);
+	size_t getNumberOfShipTypes() const;
+	std::string getNameOfShipType(size_t i) const;
 	// Ship get
 	ShipHull* getShip(Ogre::SceneNode* sceneNode);
 private:
-	std::map<std::string, ShipTypeDescription> mShipTypes;
+	std::vector<std::pair<std::string, ShipTypeDescription> > mShipTypes;
 	std::vector<ShipHull*> mShips;
 	Ogre::SceneManager* mSceneManager;
 };
