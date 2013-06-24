@@ -28,7 +28,7 @@ public:
 	virtual void onNodeSearch(Ogre::SceneNode* foundNode) = 0;
 };
 
-class Grid3D: public OIS::KeyListener, public OIS::MouseListener, public Ogre::RaySceneQueryListener
+class Grid3D: public OIS::KeyListener, public OIS::MouseListener
 {
 public:
 	enum MarkerType
@@ -58,9 +58,6 @@ public:
 	virtual bool mouseMoved(const OIS::MouseEvent &arg);
 	virtual bool mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
 	virtual bool mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id);
-	// Ray listener
-	virtual bool queryResult(Ogre::MovableObject* obj, Ogre::Real distance);
-	virtual bool queryResult(Ogre::SceneQuery::WorldFragment* fragment, Ogre::Real distance);
 	// Do select
 	void processSelected();
 	// Get set listener

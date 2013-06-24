@@ -82,14 +82,6 @@ void AOWMainMenuState::onActivate()
 		onePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&AOWMainMenuState::onePlayerButtonHandler, this));
 	// Add as frame listener
 	OgreFrameworkSingleton.getRoot()->addFrameListener(this);
-	// TMP Bigyo
-	auto propIt = CEGUI::System::getSingleton().getGUISheet()->getPropertyIterator();
-	while (!propIt.isAtEnd())
-	{
-		cout << propIt.getCurrentKey() << endl;
-		propIt++;
-	}
-
 	// Start single
 	mShouldStartGame = true;
 	mSocketConnected = false;

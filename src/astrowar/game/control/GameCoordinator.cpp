@@ -67,20 +67,16 @@ void GameCoordinator::onSelect(Grid3D* grid, size_t x, size_t y, size_t z)
 {
 	if (mControlProvider->getGamePhase() == GameControlProvider::GP_SET)
 	{
-		cout << "Ship to " << grid->getNode()->getName() << ": [" << x << "," << y << "," << z << "]" << endl;
 		auto ship = mControlProvider->createShip(grid, { x, y, z });
 		if (ship)
 		{
 		}
 		else
 		{
-			cout << "Nincs több ilyen hajó!" << endl;
 		}
 	}
 	else if (mControlProvider->getGamePhase() == GameControlProvider::GP_BATTLE)
 	{
-		cout << "Fire on " << grid->getNode()->getName() << ": [" << x << "," << y << "," << z << "]" << endl;
-
 		GameControlProvider::FireResult result = mControlProvider->fireTorpedo( { x, y, z });
 		if (result.isDamaged)
 			grid->setMarkerAt(Grid3D::MT_RED, { x, y, z });
@@ -95,7 +91,6 @@ void GameCoordinator::onNodeSearch(Ogre::SceneNode* foundNode)
 	auto ship = mControlProvider->getShipForNode(foundNode);
 	if (ship)
 	{
-		cout << "Found ship: " << ship->getNode()->getName() << endl;
 		// Set as selected
 		mControlProvider->selectShip(ship);
 	}
@@ -111,7 +106,6 @@ std::vector<int> GameCoordinator::convertDirection(std::vector<int> direction)
 	vector<Ogre::Vector3> locals = { cam_ori.xAxis(), cam_ori.yAxis(), cam_ori.zAxis() };
 	vector<Ogre::Vector3> globals = { Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Y, Ogre::Vector3::UNIT_Z, -Ogre::Vector3::UNIT_X, -Ogre::Vector3::UNIT_Y, -Ogre::Vector3::UNIT_Z };
 	vector<std::string> axis_names = { "X", "Y", "Z", "-X", "-Y", "-Z" };
-	cout << "Nearest axes for locals: ";
 	for (size_t i = 0; i < locals.size(); ++i)
 	{
 		size_t nearest_index = 0;
@@ -120,14 +114,9 @@ std::vector<int> GameCoordinator::convertDirection(std::vector<int> direction)
 			if (locals[i].angleBetween(globals[j]) < locals[i].angleBetween(globals[nearest_index]))
 				nearest_index = j;
 		}
-		cout << "Local#" << axis_names[i] << " -> Global#" << axis_names[nearest_index] << " ";
-		// Converting table
+		// Converting
 		converted[nearest_index % 3] = (nearest_index >= 3 ? -1 : 1) * direction[i];
 	}
-	cout << endl;
-
-	cout << "Dir: " << direction[0] << ";" << direction[1] << ";" << direction[2] << ", Conv: " << converted[0] << ";" << converted[1] << ";" << converted[2] << endl;
-
 	return converted;
 }
 
@@ -179,21 +168,18 @@ bool GameCoordinator::keyReleased(const OIS::KeyEvent &arg)
 // CEGUI handler
 bool GameCoordinator::handleSetButton(const CEGUI::EventArgs& arg)
 {
-	cout << "Set Button" << endl;
 	fireEventOnActiveGrid();
 	return true;
 }
 
 bool GameCoordinator::handleReadyButton(const CEGUI::EventArgs& arg)
 {
-	cout << "Ready Button" << endl;
 	mControlProvider->setDone();
 	return true;
 }
 
 bool GameCoordinator::handleFireButton(const CEGUI::EventArgs& arg)
 {
-	cout << "Fire Button" << endl;
 	fireEventOnActiveGrid();
 	return true;
 }
@@ -236,8 +222,6 @@ void GameCoordinator::fireEventOnActiveGrid()
 // On Game Events
 void GameCoordinator::onPlayerChange(int playerFrom, int playerTo)
 {
-	cout << "Change player from: " << playerFrom << " to " << playerTo << endl;
-
 	mGrids[1 - playerFrom]->deactivate();
 	mGrids[1 - playerTo]->activate();
 	mGrids[0]->setMarkerVisible(false);
@@ -248,7 +232,6 @@ void GameCoordinator::onPlayerChange(int playerFrom, int playerTo)
 
 void GameCoordinator::onSetReady()
 {
-	cout << "Set Ready" << endl;
 	// Ready Button
 	CEGUI::PushButton* readyButton = static_cast<CEGUI::PushButton*>(CEGUI::System::getSingleton().getGUISheet()->getChildRecursive("Game/Control/Set/ReadyButton"));
 	if (readyButton)
@@ -257,7 +240,6 @@ void GameCoordinator::onSetReady()
 
 void GameCoordinator::onSetCancel()
 {
-	cout << "Set Cancel" << endl;
 	// Ready Button
 	CEGUI::PushButton* readyButton = static_cast<CEGUI::PushButton*>(CEGUI::System::getSingleton().getGUISheet()->getChildRecursive("Game/Control/Set/ReadyButton"));
 	if (readyButton)

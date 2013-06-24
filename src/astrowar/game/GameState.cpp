@@ -12,6 +12,8 @@
 #include "../../graphics/Ois/OisFramework.hpp"
 // CEGUI
 #include "../../graphics/Cegui/CeguiTranslator.hpp"
+// Utils
+#include "../../tools/echoes.hpp"
 
 using namespace std;
 using namespace Ogre;
@@ -51,6 +53,8 @@ void GameState::notifyOnGameChange()
 
 void GameState::onActivate()
 {
+	// Log game started
+	echo("Game State Started");
 	// Super class
 	OgreState::onActivate();
 	// Camera & Viewport
@@ -94,9 +98,6 @@ void GameState::onActivate()
 	// Add to listeners
 	OisFrameworkSingleton.addMouseListener(this);
 	OisFrameworkSingleton.addKeyListener(this);
-
-	cout << "Game State Cegui Before" << endl;
-
 	// Back Button
 	CEGUI::PushButton* backButton = static_cast<CEGUI::PushButton*>(guiSys.getGUISheet()->getChildRecursive("Game/Menu/BackButton"));
 	if (backButton)
@@ -113,22 +114,15 @@ void GameState::onActivate()
 	CEGUI::PushButton* fireButton = static_cast<CEGUI::PushButton*>(guiSys.getGUISheet()->getChildRecursive("Game/Control/Battle/FireButton"));
 	if (fireButton)
 		fireButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&GameCoordinator::handleFireButton, mCoordinator));
-
-	cout << "Game State Control Buttons Created" << endl;
-
 	// Ship list
 	CEGUI::MultiColumnList* shipList1 = static_cast<CEGUI::MultiColumnList*>(guiSys.getGUISheet()->getChildRecursive("Game/Player1Panel/ShipList"));
 	CEGUI::MultiColumnList* shipList2 = static_cast<CEGUI::MultiColumnList*>(guiSys.getGUISheet()->getChildRecursive("Game/Player2Panel/ShipList"));
-	cout << "Game State ShipLists Get: " << shipList1 << " " << shipList2 << endl;
 	mCoordinator->connectToShipLists(shipList1, shipList2, mControl);
-	cout << "Game State ShipLists Set" << endl;
 	// Set coordinstor
 	mCoordinator->setControlProvider(mControl);
 	mCoordinator->setListener(this);
 	mCoordinator->connectToCameraNode(mCameraNode);
 	mControl->setListener(mCoordinator);
-
-	cout << "Game State Started" << endl;
 }
 
 void GameState::onDeactivate()

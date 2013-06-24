@@ -207,7 +207,6 @@ bool Grid3D::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 					auto sceneNode = result.movable->getParentSceneNode();
 					if (sceneNode->getName()[0] == 'S')
 					{
-						cout << sceneNode->getName() << " " << result.distance << endl;
 						mGridListener->onNodeSearch(sceneNode);
 						break;
 					}
@@ -247,52 +246,6 @@ bool Grid3D::mousePressed(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 }
 
 bool Grid3D::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
-{
-	return true;
-}
-
-bool Grid3D::queryResult(Ogre::MovableObject* obj, Ogre::Real distance)
-{
-	if (isRightButton)
-	{
-		auto sceneNode = obj->getParentSceneNode();
-		if (sceneNode->getName()[0] == 'S')
-		{
-			cout << sceneNode->getName() << " " << distance << endl;
-		}
-	}
-	else
-	{
-		if (obj->getName() == mGridShape->getName())
-		{
-			// Intersection of the ray and the grid
-			auto vec = mMouseRay.getPoint(distance) - mSceneNode->getPosition();
-			// Some normalization - all to => [-1;1]
-			vec.x /= mDimensions[0] * mSceneNode->getScale().x / 2;
-			vec.y /= mDimensions[1] * mSceneNode->getScale().y / 2;
-			vec.z /= mDimensions[2] * mSceneNode->getScale().z / 2;
-			// Convert to a vector
-			std::vector<float> point = { vec.x, vec.y, vec.z };
-			// Determine the clicked side
-			size_t side = 0;
-			for (size_t i = 0; i < point.size(); ++i)
-				if (fabsf(point[i]) > fabsf(point[side]))
-					side = i;
-			// Calc the new coordinates
-			for (size_t i = 0; i < point.size(); ++i)
-			{
-				if (i == side)
-					continue;
-				size_t coord = mDimensions[i] * (point[i] + 1) / 2;
-				markerStepTo(i, coord);
-			}
-		}
-	}
-
-	return true;
-}
-
-bool Grid3D::queryResult(Ogre::SceneQuery::WorldFragment* fragment, Ogre::Real distance)
 {
 	return true;
 }
