@@ -24,6 +24,7 @@ public:
 	virtual bool isSetReady();
 	virtual int getActivePlayer();
 	virtual void setDone();
+	virtual bool fireTorpedo(std::vector<size_t> coords);
 	// Control Provider Ships
 	virtual ShipHull* createShip(Grid3D* grid, std::vector<size_t> coords);
 	ShipHull* getShipForNode(Ogre::SceneNode* sceneNode);
@@ -68,11 +69,14 @@ private:
 	void onSetReady();
 	void onSetCancel();
 	void onShipCreated();
+	void onBattleStart();
+	bool mPrevReady;
 	// Game Phase
 	GameControlProvider::GamePhase mPhase;
 
 	// TEST
 	std::vector<size_t> mShipNumbers;
+	int mPlayer;
 };
 
 #endif /* GAMECONTROL_HPP_ */

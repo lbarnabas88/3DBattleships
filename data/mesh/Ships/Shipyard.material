@@ -14,15 +14,15 @@ material _missing_material_
     }
 }
 
-// HullG genrated by blender2ogre 0.5.9
+// Hull genrated by blender2ogre 0.5.9
 
-material HullG 
+material Hull 
 {
     receive_shadows on 
 
     technique
     {
-        pass HullG
+        pass Hull
         {
             ambient 0.39311328530311584 0.39311328530311584 0.39311328530311584 1.0
             diffuse 0.3144906329287682 0.3144906329287682 0.3144906329287682 1.0
@@ -154,15 +154,15 @@ material HullC
         }
     }
 }
-// HullG.001 genrated by blender2ogre 0.5.9
+// HullG genrated by blender2ogre 0.5.9
 
-material HullG.001 
+material HullG 
 {
     receive_shadows on 
 
     technique
     {
-        pass HullG.001
+        pass HullG
         {
             ambient 0.0 0.800000011920929 0.07904662936925888 1.0
             diffuse 0.0 0.6400000190734865 0.06323730443771636 1.0

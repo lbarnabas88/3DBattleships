@@ -75,8 +75,8 @@ void GameState::onActivate()
 	// Create grids
 	size_t dim = 8;
 	std::vector<size_t> dimensions = { dim, dim, dim };
-	gridA.reset(new Grid3D(mSceneManager, mCamera, dimensions, ColourValue(0.8, 0.3, 0.1, 0.5)));
-	gridB.reset(new Grid3D(mSceneManager, mCamera, dimensions, ColourValue(0.3, 0.8, 0.1, 0.5)));
+	gridA.reset(new Grid3D(mSceneManager, mCamera, dimensions, ColourValue(0.8, 0.3, 0.1)));
+	gridB.reset(new Grid3D(mSceneManager, mCamera, dimensions, ColourValue(0.3, 0.1, 0.8)));
 	size_t maxDimension = 0;
 	for (auto d : dimensions)
 		if (d > maxDimension)

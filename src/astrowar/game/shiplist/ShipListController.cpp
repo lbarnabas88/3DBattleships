@@ -88,6 +88,9 @@ void ShipListController::buildForSet()
 		item = new CEGUI::ListboxTextItem(utf8ToCeguiString(utils::t2str(mDataProvider->getShipTypeCount(mPlayer, i))), i);
 		item->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
 		mColumnList->setItem(item, 1, i);
+		// Select 1st
+		if (i == 0)
+			mColumnList->setItemSelectState(item, true);
 	}
 }
 void ShipListController::buildForBattle()

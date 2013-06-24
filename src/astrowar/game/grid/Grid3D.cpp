@@ -89,6 +89,10 @@ Grid3D::Grid3D(Ogre::SceneManager* scene_manager, Ogre::Camera* camera, std::vec
 	// Create ray
 	mRayScnQuery = mSceneManager->createRayQuery(Ogre::Ray());
 	mRayScnQuery->setSortByDistance(true);
+	// Markers
+	mMarkers.resize(mDimensions[0] * mDimensions[1] * mDimensions[2]);
+	for (auto& marker : mMarkers)
+		marker = NULL;
 	// Next ID
 	++sId;
 }
@@ -99,6 +103,13 @@ Grid3D::~Grid3D()
 	OisFrameworkSingleton.removeMouseListener(this);
 	mSceneManager->destroyManualObject(mGridShape);
 	mSceneManager->destroyQuery(mRayScnQuery);
+	for (auto marker : mMarkers)
+		if (marker)
+		{
+			mSceneManager->destroyEntity(marker->entity);
+			mSceneManager->destroySceneNode(marker->node);
+			delete marker;
+		}
 }
 
 Ogre::SceneNode* Grid3D::getNode()
@@ -165,15 +176,6 @@ void Grid3D::markerStep(size_t direction, int numberOfSteps)
 
 bool Grid3D::keyPressed(const OIS::KeyEvent& keyEvent)
 {
-	if (!isActive())
-		return true;
-	if (keyEvent.key == OIS::KC_NUMPAD4 || keyEvent.key == OIS::KC_NUMPAD6)
-		markerStep(0, keyEvent.key == OIS::KC_NUMPAD4 ? -1 : 1);
-	if (keyEvent.key == OIS::KC_NUMPAD9 || keyEvent.key == OIS::KC_NUMPAD3)
-		markerStep(1, keyEvent.key == OIS::KC_NUMPAD3 ? -1 : 1);
-	if (keyEvent.key == OIS::KC_NUMPAD8 || keyEvent.key == OIS::KC_NUMPAD2)
-		markerStep(2, keyEvent.key == OIS::KC_NUMPAD8 ? -1 : 1);
-
 	return true;
 }
 
@@ -354,4 +356,61 @@ void Grid3D::deactivate()
 std::vector<size_t> Grid3D::getDimensions() const
 {
 	return mDimensions;
+}
+
+// Markers
+Ogre::String markerTypeToMaterialName(Grid3D::MarkerType type)
+{
+	switch (type)
+	{
+	case Grid3D::MT_RED:
+		return "HullR";
+	case Grid3D::MT_WHITE:
+		return "HullW";
+	default:
+		return "Hull";
+	}
+}
+
+void Grid3D::setMarkerAt(MarkerType fieldType, std::vector<size_t> coords)
+{
+	auto& marker = mMarkers[markerIndexFromCoordinates(coords)];
+	if (fieldType == MT_EMPTY)
+	{
+		if (marker)
+		{
+			mSceneManager->destroyEntity(marker->entity);
+			mSceneManager->destroySceneNode(marker->node);
+			delete marker;
+			marker = NULL;
+		}
+	}
+	else
+	{
+		if (marker)
+		{
+			marker->entity->setMaterialName(markerTypeToMaterialName(fieldType));
+		}
+		else
+		{
+			marker = new Marker;
+			marker->entity = mSceneManager->createEntity("Sphere.mesh");
+			marker->entity->setMaterialName(markerTypeToMaterialName(fieldType));
+			marker->node = mSceneNode->createChildSceneNode();
+			marker->node->attachObject(marker->entity);
+			marker->node->setPosition(coords2position(coords));
+			marker->node->setScale(0.2f, 0.2f, 0.2f);
+			marker->node->setVisible(false);
+		}
+	}
+}
+
+Grid3D::MarkerType Grid3D::getMarkerAt(std::vector<size_t> coords)
+{
+	return MT_EMPTY;
+}
+
+size_t Grid3D::markerIndexFromCoordinates(std::vector<size_t> coords)
+{
+	return coords[0] * mDimensions[0] * mDimensions[1] + coords[1] * mDimensions[1] + coords[2];
 }

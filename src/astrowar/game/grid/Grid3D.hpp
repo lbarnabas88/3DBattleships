@@ -31,6 +31,11 @@ public:
 class Grid3D: public OIS::KeyListener, public OIS::MouseListener, public Ogre::RaySceneQueryListener
 {
 public:
+	enum MarkerType
+	{
+		MT_EMPTY, MT_RED, MT_WHITE
+	};
+
 	Grid3D(Ogre::SceneManager* scene_manager, Ogre::Camera* camera, std::vector<size_t> dimensions, Ogre::ColourValue colour = Ogre::ColourValue::White);
 	virtual ~Grid3D();
 
@@ -72,6 +77,9 @@ public:
 	void deactivate();
 	// Getter of dimensions
 	std::vector<size_t> getDimensions() const;
+	// Markers
+	void setMarkerAt(MarkerType fieldType, std::vector<size_t> coords);
+	MarkerType getMarkerAt(std::vector<size_t> coords);
 protected:
 	// Reference to the scene manager and camera
 	Ogre::SceneManager* mSceneManager;
@@ -94,6 +102,15 @@ protected:
 	Grid3DListener* mGridListener;
 	// Active
 	bool mIsActive;
+	// Markers
+	struct Marker
+	{
+		Ogre::SceneNode* node;
+		Ogre::Entity* entity;
+		MarkerType type;
+	};
+	size_t markerIndexFromCoordinates(std::vector<size_t> coords);
+	std::vector<Marker*> mMarkers;
 };
 
 #endif /* GRID3D_HPP_ */

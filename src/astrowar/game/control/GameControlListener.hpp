@@ -17,6 +17,8 @@ public:
 	virtual void onSetReady() = 0;
 	virtual void onSetCancel() = 0;
 	virtual void onShipCreated() = 0;
+	virtual void onBattleStart() = 0;
+	virtual void onBattleEnd() = 0;
 };
 
 #endif /* GAMECONTROLLISTENER_HPP_ */

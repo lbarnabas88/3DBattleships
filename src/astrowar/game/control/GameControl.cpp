@@ -14,7 +14,7 @@
 //****************************************
 
 GameControl::GameControl(Ogre::SceneManager* sceneManager) :
-		mShipyard(sceneManager), mSelectedShip(NULL), mListener(NULL), mPhase(GP_SET)
+		mShipyard(sceneManager), mSelectedShip(NULL), mListener(NULL), mPrevReady(false), mPhase(GP_SET), mPlayer(0)
 {
 	// Init shipyard
 	mShipyard.registerShipType("Destroyer", { "Destroyer.mesh" });
@@ -24,7 +24,7 @@ GameControl::GameControl(Ogre::SceneManager* sceneManager) :
 	mShipyard.registerShipType("Carrier", { "Carrier.mesh" });
 
 	mShipNumbers =
-	{	2,2,1,1,1};
+	{	1,0,0,0,0};
 	mListSelections[0] = 0;
 	mListSelections[1] = 0;
 	// TODO load from game
@@ -51,12 +51,21 @@ bool GameControl::isSetReady()
 
 int GameControl::getActivePlayer()
 {
-	return 0;
+	return mPlayer;
 }
 
 void GameControl::setDone()
 {
 	mPhase = GP_BATTLE;
+	selectShip(NULL);
+	onBattleStart();
+}
+
+bool GameControl::fireTorpedo(std::vector<size_t> coords)
+{
+	mListener->onPlayerChange(mPlayer, 1 - mPlayer);
+	mPlayer = 1 - mPlayer;
+	return rand() % 2;
 }
 
 ShipHull* GameControl::createShip(Grid3D* grid, std::vector<size_t> coords)
@@ -240,13 +249,12 @@ void GameControl::checkShip(ShipHull* ship)
 	}
 	ship->setColor(ship_color);
 	// Check
-	static bool prev_ready = false;
 	bool act_ready = isSetReady();
-	if (act_ready && !prev_ready)
+	if (act_ready && !mPrevReady)
 		onSetReady();
-	if (!act_ready && prev_ready)
+	if (!act_ready && mPrevReady)
 		onSetCancel();
-	prev_ready = act_ready;
+	mPrevReady = act_ready;
 }
 
 void GameControl::colorOnSelection(ShipHull* ship)
@@ -286,4 +294,10 @@ void GameControl::onShipCreated()
 {
 	if (mListener)
 		mListener->onShipCreated();
+}
+
+void GameControl::onBattleStart()
+{
+	if (mListener)
+		mListener->onBattleStart();
 }

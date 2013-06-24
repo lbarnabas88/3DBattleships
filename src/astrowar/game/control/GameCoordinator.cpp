@@ -80,6 +80,11 @@ void GameCoordinator::onSelect(Grid3D* grid, size_t x, size_t y, size_t z)
 	else if (mControlProvider->getGamePhase() == GameControlProvider::GP_BATTLE)
 	{
 		cout << "Fire on " << grid->getNode()->getName() << ": [" << x << "," << y << "," << z << "]" << endl;
+
+		if (mControlProvider->fireTorpedo( { x, y, z }))
+			grid->setMarkerAt(Grid3D::MT_RED, { x, y, z });
+		else
+			grid->setMarkerAt(Grid3D::MT_WHITE, { x, y, z });
 	}
 }
 
@@ -128,7 +133,7 @@ std::vector<int> GameCoordinator::convertDirection(std::vector<int> direction)
 // Key listener
 bool GameCoordinator::keyPressed(const OIS::KeyEvent &arg)
 {
-	if (arg.key == OIS::KC_NUMPADENTER)
+	if (arg.key == OIS::KC_NUMPADENTER && mControlProvider->getGamePhase() != GameControlProvider::GP_END && mControlProvider->getActivePlayer() == 0)
 		fireEventOnActiveGrid();
 
 	if (mControlProvider->getGamePhase() == GameControlProvider::GP_SET)
@@ -151,6 +156,17 @@ bool GameCoordinator::keyPressed(const OIS::KeyEvent &arg)
 			mControlProvider->moveSelectedShipBy(convertDirection( { 0, 0, -1 }));
 	}
 
+	if (mControlProvider->getGamePhase() == GameControlProvider::GP_BATTLE)
+	{
+		if (mControlProvider->getActivePlayer() == 1)
+		{
+			if (arg.key == OIS::KC_TAB)
+			{
+				mControlProvider->fireTorpedo(vector<size_t>( { (size_t) rand() % 8, (size_t) rand() % 8, (size_t) rand() % 8 }));
+			}
+		}
+	}
+
 	return true;
 }
 
@@ -170,6 +186,7 @@ bool GameCoordinator::handleSetButton(const CEGUI::EventArgs& arg)
 bool GameCoordinator::handleReadyButton(const CEGUI::EventArgs& arg)
 {
 	cout << "Ready Button" << endl;
+	mControlProvider->setDone();
 	return true;
 }
 
@@ -204,17 +221,28 @@ void GameCoordinator::setListener(GameCoordinatorListener* listener)
 
 void GameCoordinator::fireEventOnActiveGrid()
 {
-	int grid_num = 0;
-	for (auto grid : mGrids)
-		if (grid && mControlProvider->getActivePlayer() == grid_num++)
-			grid->processSelected();
+	if (mControlProvider->getGamePhase() == GameControlProvider::GP_SET)
+		mGrids[0]->processSelected();
+	else if (mControlProvider->getGamePhase() == GameControlProvider::GP_BATTLE)
+	{
+		if (mControlProvider->getActivePlayer() == 0)
+		{
+			mGrids[1]->processSelected();
+		}
+	}
 }
 
 // On Game Events
 void GameCoordinator::onPlayerChange(int playerFrom, int playerTo)
 {
-	mGrids[playerFrom]->getNode()->setVisible(false);
-	mGrids[playerTo]->getNode()->setVisible(true);
+	cout << "Change player from: " << playerFrom << " to " << playerTo << endl;
+
+	mGrids[1 - playerFrom]->deactivate();
+	mGrids[1 - playerTo]->activate();
+	mGrids[0]->setMarkerVisible(false);
+
+	CEGUI::Window* control_panel = CEGUI::System::getSingleton().getGUISheet()->getChildRecursive("Game/Control/Battle");
+	control_panel->setEnabled(playerTo == 0);
 }
 
 void GameCoordinator::onSetReady()
@@ -239,4 +267,21 @@ void GameCoordinator::onShipCreated()
 {
 	if (mControlProvider)
 		mShipControllers[mControlProvider->getActivePlayer()].update();
+}
+
+void GameCoordinator::onBattleStart()
+{
+	// Grids
+	mGrids[0]->deactivate();
+	mGrids[0]->setMarkerVisible(false);
+	mGrids[1]->activate();
+	// GUI
+	CEGUI::Window* set_panel = CEGUI::System::getSingleton().getGUISheet()->getChildRecursive("Game/Control/Set");
+	CEGUI::Window* battle_panel = CEGUI::System::getSingleton().getGUISheet()->getChildRecursive("Game/Control/Battle");
+	set_panel->setVisible(false);
+	battle_panel->setVisible(true);
+}
+
+void GameCoordinator::onBattleEnd()
+{
 }

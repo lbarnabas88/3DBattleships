@@ -28,7 +28,7 @@ Ogre::String ShipHull::shipColorToMaterialName(ShipColor sc)
 	case SCLR_BLACK:
 		return "HullK";
 	default:
-		return "HullG";
+		return "Hull";
 	}
 }
 
@@ -45,8 +45,7 @@ std::vector<Ogre::Quaternion> generateOrientations()
 		for (float angle2 = 0.0f; angle2 < 360.0f; angle2 += 90.0f)
 		{
 			cout << "GenO#" << numOfO++ << ": " << angle1 << " " << angle2 << endl;
-			Ogre::Quaternion q = Ogre::Quaternion(Ogre::Radian(Ogre::Degree(angle1)), Ogre::Vector3::UNIT_Y)
-					* Ogre::Quaternion(Ogre::Radian(Ogre::Degree(angle2)), Ogre::Vector3::UNIT_Z);
+			Ogre::Quaternion q = Ogre::Quaternion(Ogre::Radian(Ogre::Degree(angle1)), Ogre::Vector3::UNIT_Y) * Ogre::Quaternion(Ogre::Radian(Ogre::Degree(angle2)), Ogre::Vector3::UNIT_Z);
 			orientations.push_back(q);
 		}
 	}
@@ -55,8 +54,7 @@ std::vector<Ogre::Quaternion> generateOrientations()
 		for (float angle2 = 0.0f; angle2 < 360.0f; angle2 += 90.0f)
 		{
 			cout << "GenO#" << numOfO++ << ": " << angle1 << " " << angle2 << endl;
-			Ogre::Quaternion q = Ogre::Quaternion(Ogre::Radian(Ogre::Degree(angle1)), Ogre::Vector3::UNIT_X)
-					* Ogre::Quaternion(Ogre::Radian(Ogre::Degree(angle2)), Ogre::Vector3::UNIT_Z);
+			Ogre::Quaternion q = Ogre::Quaternion(Ogre::Radian(Ogre::Degree(angle1)), Ogre::Vector3::UNIT_X) * Ogre::Quaternion(Ogre::Radian(Ogre::Degree(angle2)), Ogre::Vector3::UNIT_Z);
 			orientations.push_back(q);
 		}
 	}

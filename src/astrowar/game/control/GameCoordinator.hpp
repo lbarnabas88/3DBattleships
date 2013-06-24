@@ -59,6 +59,8 @@ private:
 	virtual void onSetReady();
 	virtual void onSetCancel();
 	virtual void onShipCreated();
+	virtual void onBattleStart();
+	virtual void onBattleEnd();
 	// Grids
 	Grid3D* mGrids[2];
 	void fireEventOnActiveGrid();

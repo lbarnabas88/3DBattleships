@@ -19,7 +19,7 @@ class GameControlProvider
 public:
 	enum GamePhase
 	{
-		GP_SET, GP_BATTLE
+		GP_SET, GP_BATTLE, GP_END
 	};
 	virtual ~GameControlProvider();
 	// State
@@ -27,6 +27,7 @@ public:
 	virtual bool isSetReady() = 0;
 	virtual int getActivePlayer() = 0;
 	virtual void setDone() = 0;
+	virtual bool fireTorpedo(std::vector<size_t> coords) = 0;
 	// Ship management
 	virtual ShipHull* createShip(Grid3D* grid, std::vector<size_t> coords) = 0;
 	virtual ShipHull* getShipForNode(Ogre::SceneNode* sceneNode) = 0;
