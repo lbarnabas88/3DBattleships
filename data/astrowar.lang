@@ -26,5 +26,6 @@ game.menu.title	Menu	Menü
 game.control.set	Set Ship	Hajó Lerakás
 game.control.ready	Ready	Kész
 game.control.fire	Fire	Tűz
-game.ships.name	Ships	Hajók
+game.ships.name.set	Ships to set	Hajók
+game.ships.name.battle	Fleet	Flotta
 game.ships.quantity	q	db

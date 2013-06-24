@@ -57,7 +57,7 @@ void ShipListController::setDataProvider(ShipListControllerDataProvider* dataPro
 }
 
 // Build
-void ShipListController::buildForSet()
+void ShipListController::build()
 {
 	// If nil do nothing
 	if (!mColumnList)
@@ -65,8 +65,8 @@ void ShipListController::buildForSet()
 	// Clear
 	clear();
 	// Add columns
-	mColumnList->addColumn(utf8ToCeguiString(GameSettingsSingleton.getLanguage().textForCode("game.ships.name")), 0, CEGUI::UDim(0.7, 0));
-	mColumnList->addColumn(utf8ToCeguiString(GameSettingsSingleton.getLanguage().textForCode("game.ships.quantity")), 1, CEGUI::UDim(0.2, 0));
+	mColumnList->addColumn(mDataProvider->getShipColumnName(), 0, CEGUI::UDim(0.7, 0));
+	mColumnList->addColumn(mDataProvider->getQuantityColumnName(), 1, CEGUI::UDim(0.2, 0));
 	// Set selection mode
 	mColumnList->setSelectionMode(CEGUI::MultiColumnList::RowSingle);
 	// Add cells
@@ -79,27 +79,23 @@ void ShipListController::buildForSet()
 		// Create cell for name
 		CEGUI::ListboxTextItem* item;
 		item = new CEGUI::ListboxTextItem(mDataProvider->getShipTypeName(mPlayer, i), i);
-		item->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
+		if (mDataProvider->needSelection())
+			item->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
 		mColumnList->setItem(item, 0, i);
 		// Select 1st
 		if (i == 0)
 			mColumnList->setItemSelectState(item, true);
 		// Create cell for count
 		item = new CEGUI::ListboxTextItem(utf8ToCeguiString(utils::t2str(mDataProvider->getShipTypeCount(mPlayer, i))), i);
-		item->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
+		if (mDataProvider->needSelection())
+			item->setSelectionBrushImage("TaharezLook", "MultiListSelectionBrush");
 		mColumnList->setItem(item, 1, i);
 		// Select 1st
 		if (i == 0)
 			mColumnList->setItemSelectState(item, true);
 	}
-}
-void ShipListController::buildForBattle()
-{
-	// If nil do nothing
-	if (!mColumnList)
-		return;
-	// Clear
-	clear();
+	// Set not sortable
+	mColumnList->setUserSortControlEnabled(false);
 }
 // Clear
 void ShipListController::clear()
@@ -107,12 +103,9 @@ void ShipListController::clear()
 	// If nil do nothing
 	if (!mColumnList)
 		return;
-	//
-	for (unsigned i = 0; i < mColumnList->getColumnCount(); ++i)
-	{
-		// Remove Column
-		mColumnList->removeColumnWithID(i);
-	}
+	// Clear all column
+	while (mColumnList->getColumnCount() > 0)
+		mColumnList->removeColumn(0);
 }
 
 // Upate

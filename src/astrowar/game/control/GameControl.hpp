@@ -24,7 +24,7 @@ public:
 	virtual bool isSetReady();
 	virtual int getActivePlayer();
 	virtual void setDone();
-	virtual bool fireTorpedo(std::vector<size_t> coords);
+	virtual FireResult fireTorpedo(std::vector<size_t> coords);
 	// Control Provider Ships
 	virtual ShipHull* createShip(Grid3D* grid, std::vector<size_t> coords);
 	ShipHull* getShipForNode(Ogre::SceneNode* sceneNode);
@@ -46,6 +46,9 @@ public:
 	virtual size_t numOfShipType(int player);
 	virtual CEGUI::String getShipTypeName(int player, size_t i);
 	virtual size_t getShipTypeCount(int player, size_t i);
+	virtual bool needSelection();
+	virtual CEGUI::String getShipColumnName();
+	virtual CEGUI::String getQuantityColumnName();
 	// Listener
 	virtual void onSelectionChange(int player, unsigned selection);
 	// Self listener
@@ -70,6 +73,7 @@ private:
 	void onSetCancel();
 	void onShipCreated();
 	void onBattleStart();
+	void onBattleEnd();
 	bool mPrevReady;
 	// Game Phase
 	GameControlProvider::GamePhase mPhase;

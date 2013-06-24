@@ -8,6 +8,8 @@
 #include "GameControl.hpp"
 // CEGUI
 #include "../../../graphics/Cegui/CeguiTranslator.hpp"
+// GAME
+#include "../../../game/settings/GameSettings.hpp"
 
 //****************************************
 //*** Game Control
@@ -61,11 +63,20 @@ void GameControl::setDone()
 	onBattleStart();
 }
 
-bool GameControl::fireTorpedo(std::vector<size_t> coords)
+GameControl::FireResult GameControl::fireTorpedo(std::vector<size_t> coords)
 {
+	FireResult result;
+	// Fire
 	mListener->onPlayerChange(mPlayer, 1 - mPlayer);
 	mPlayer = 1 - mPlayer;
-	return rand() % 2;
+	// Set
+	result.isDamaged = rand() % 2;
+	result.isSink = false;
+
+	mPhase = GP_END;
+	onBattleEnd();
+
+	return result;
 }
 
 ShipHull* GameControl::createShip(Grid3D* grid, std::vector<size_t> coords)
@@ -201,11 +212,32 @@ size_t GameControl::getShipTypeCount(int player, size_t i)
 	return mShipNumbers[i];
 }
 
+bool GameControl::needSelection()
+{
+	return mPhase == GP_SET;
+}
+
+CEGUI::String GameControl::getShipColumnName()
+{
+	if (mPhase == GP_SET)
+		return utf8ToCeguiString(GameSettingsSingleton.getLanguage().textForCode("game.ships.name.set"));
+	else
+		return utf8ToCeguiString(GameSettingsSingleton.getLanguage().textForCode("game.ships.name.battle"));
+}
+
+CEGUI::String GameControl::getQuantityColumnName()
+{
+	return utf8ToCeguiString(GameSettingsSingleton.getLanguage().textForCode("game.ships.quantity"));
+}
+
 // Listener
 void GameControl::onSelectionChange(int player, unsigned selection)
 {
-	std::cout << "Player#" << player << ", SelectedShipId: " << selection << ", Ship type: " << mShipyard.getNameOfShipType(selection) << std::endl;
-	mListSelections[player] = selection;
+	if (mPhase == GP_SET)
+	{
+		std::cout << "Player#" << player << ", SelectedShipId: " << selection << ", Ship type: " << mShipyard.getNameOfShipType(selection) << std::endl;
+		mListSelections[player] = selection;
+	}
 }
 
 // Self listener
@@ -300,4 +332,10 @@ void GameControl::onBattleStart()
 {
 	if (mListener)
 		mListener->onBattleStart();
+}
+
+void GameControl::onBattleEnd()
+{
+	if (mListener)
+		mListener->onBattleEnd();
 }

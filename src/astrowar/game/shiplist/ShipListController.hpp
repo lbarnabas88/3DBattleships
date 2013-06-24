@@ -21,6 +21,9 @@ public:
 	virtual size_t numOfShipType(int player) = 0;
 	virtual CEGUI::String getShipTypeName(int player, size_t i) = 0;
 	virtual size_t getShipTypeCount(int player, size_t i) = 0;
+	virtual bool needSelection() = 0;
+	virtual CEGUI::String getShipColumnName() = 0;
+	virtual CEGUI::String getQuantityColumnName() = 0;
 	virtual void onSelectionChange(int player, unsigned selection) = 0;
 };
 
@@ -36,8 +39,7 @@ public:
 	ShipListControllerDataProvider* getDataProvider() const;
 	void setDataProvider(ShipListControllerDataProvider* dataProvider);
 	// Build
-	void buildForSet();
-	void buildForBattle();
+	void build();
 	// Clear
 	void clear();
 	// Upate

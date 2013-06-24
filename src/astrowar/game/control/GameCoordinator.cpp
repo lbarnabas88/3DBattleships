@@ -47,13 +47,13 @@ void GameCoordinator::connectToShipLists(CEGUI::MultiColumnList* shipListA, CEGU
 	{
 		mShipControllers[0].setColumnList(shipListA);
 		mShipControllers[0].setDataProvider(provider);
-		mShipControllers[0].buildForSet();
+		mShipControllers[0].build();
 	}
 	if (shipListB)
 	{
 		mShipControllers[1].setColumnList(shipListB);
 		mShipControllers[1].setDataProvider(provider);
-		mShipControllers[1].buildForSet();
+		mShipControllers[1].build();
 	}
 }
 
@@ -81,7 +81,8 @@ void GameCoordinator::onSelect(Grid3D* grid, size_t x, size_t y, size_t z)
 	{
 		cout << "Fire on " << grid->getNode()->getName() << ": [" << x << "," << y << "," << z << "]" << endl;
 
-		if (mControlProvider->fireTorpedo( { x, y, z }))
+		GameControlProvider::FireResult result = mControlProvider->fireTorpedo( { x, y, z });
+		if (result.isDamaged)
 			grid->setMarkerAt(Grid3D::MT_RED, { x, y, z });
 		else
 			grid->setMarkerAt(Grid3D::MT_WHITE, { x, y, z });
@@ -280,8 +281,17 @@ void GameCoordinator::onBattleStart()
 	CEGUI::Window* battle_panel = CEGUI::System::getSingleton().getGUISheet()->getChildRecursive("Game/Control/Battle");
 	set_panel->setVisible(false);
 	battle_panel->setVisible(true);
+	// Ship List Controllers
+	for (auto& shipListController : mShipControllers)
+		shipListController.build();
 }
 
 void GameCoordinator::onBattleEnd()
 {
+	CEGUI::System::getSingleton().getGUISheet()->deactivate();
+	CEGUI::Window* menu = CEGUI::System::getSingleton().getGUISheet()->getChildRecursive("Game/Menu");
+	CEGUI::Window* end_text = CEGUI::System::getSingleton().getGUISheet()->getChildRecursive("Game/End");
+	menu->activate();
+	end_text->setVisible(true);
+	end_text->setText("Kisbogyo");
 }

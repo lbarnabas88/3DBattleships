@@ -27,7 +27,18 @@ public:
 	virtual bool isSetReady() = 0;
 	virtual int getActivePlayer() = 0;
 	virtual void setDone() = 0;
-	virtual bool fireTorpedo(std::vector<size_t> coords) = 0;
+	struct FireResult
+	{
+		bool isDamaged;
+		bool isSink;
+		struct
+		{
+			Ogre::String type;
+			std::vector<size_t> coords;
+			size_t orientation;
+		} ship; // Only valid if isSink true
+	};
+	virtual FireResult fireTorpedo(std::vector<size_t> coords) = 0;
 	// Ship management
 	virtual ShipHull* createShip(Grid3D* grid, std::vector<size_t> coords) = 0;
 	virtual ShipHull* getShipForNode(Ogre::SceneNode* sceneNode) = 0;

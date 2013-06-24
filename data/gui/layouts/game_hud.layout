@@ -101,5 +101,13 @@
 				</Window>
 			</Window>
 		</Window>
+		<!-- End Game Text -->
+		<Window Name="Game/End" Type="TaharezLook/StaticText">
+			<Property Name="UnifiedPosition" Value="{{0.25,0},{0.4,0}}" />
+			<Property Name="UnifiedSize" Value="{{0.5,0},{0.2,0}}" />
+			<Property Name="Text" Value="" />
+			<Property Name="HorzFormatting" Value="HorzCentred" />
+			<Property Name="Visible" Value="false" />
+		</Window>
 	</Window>
 </GUILayout>
