@@ -58,10 +58,12 @@ private:
 	virtual void onSetCancel();
 	virtual void onShipCreated();
 	virtual void onBattleStart();
-	virtual void onBattleEnd();
+	virtual void onBattleEnd(int winnerPlayer);
+	virtual void onEnemyShot(GameControlProvider::FireResult fireResult);
 	// Grids
 	Grid3D* mGrids[2];
 	void fireEventOnActiveGrid();
+	void processFireResult(GameControlProvider::FireResult fireResult);
 	// Ship Lists handlers
 	ShipListController mShipControllers[2];
 	// Control Provider

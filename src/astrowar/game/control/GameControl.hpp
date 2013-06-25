@@ -26,7 +26,7 @@ public:
 	virtual void setDone();
 	virtual FireResult fireTorpedo(std::vector<size_t> coords);
 	// Control Provider Ships
-	virtual ShipHull* createShip(Grid3D* grid, std::vector<size_t> coords);
+	virtual ShipHull* createShip(Grid3D* grid, std::vector<size_t> coords, std::string type = "");
 	ShipHull* getShipForNode(Ogre::SceneNode* sceneNode);
 	// Move ship
 	virtual void moveShipTo(ShipHull* ship, std::vector<size_t> coords);
@@ -73,7 +73,7 @@ private:
 	void onSetCancel();
 	void onShipCreated();
 	void onBattleStart();
-	void onBattleEnd();
+	void onBattleEnd(int winnerPlayer);
 	bool mPrevReady;
 	// Game Phase
 	GameControlProvider::GamePhase mPhase;

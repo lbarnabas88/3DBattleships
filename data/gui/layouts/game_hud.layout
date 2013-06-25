@@ -36,7 +36,7 @@
 			<Window Name="Game/Player1Panel/NameLabel" Type="TaharezLook/StaticText">
 				<Property Name="UnifiedPosition" Value="{{0,0},{0,0}}" />
 				<Property Name="UnifiedSize" Value="{{1,0},{0.1,0}}" />
-				<Property Name="Text" Value="PLAYER NAME A" />
+				<Property Name="Text" Value="@general.you" />
 			</Window>
 			<!-- Player 1 Ship List -->
 			<Window Name="Game/Player1Panel/ShipList" Type="TaharezLook/MultiColumnList">
@@ -55,7 +55,7 @@
 			<Window Name="Game/Panel2Panel/NameLabel" Type="TaharezLook/StaticText">
 				<Property Name="UnifiedPosition" Value="{{0,0},{0,0}}" />
 				<Property Name="UnifiedSize" Value="{{1,0},{0.1,0}}" />
-				<Property Name="Text" Value="PLAYER NAME B" />
+				<Property Name="Text" Value="@general.enemy" />
 			</Window>
 			<!-- Player 2 Ship List -->
 			<Window Name="Game/Player2Panel/ShipList" Type="TaharezLook/MultiColumnList">

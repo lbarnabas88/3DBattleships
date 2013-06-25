@@ -10,6 +10,8 @@
 #include "../../../graphics/Cegui/CeguiTranslator.hpp"
 // GAME
 #include "../../../game/settings/GameSettings.hpp"
+// ECHO
+#include "../../../tools/echoes.hpp"
 
 //****************************************
 //*** Game Control
@@ -66,27 +68,36 @@ GameControl::FireResult GameControl::fireTorpedo(std::vector<size_t> coords)
 {
 	FireResult result;
 	// Fire
+	// Set
+	result.isValid = true;
+	if (!result.isValid)
+		return result;
+	// If valid fill other informations
+	result.playerOfGrid = 1 - mPlayer;
+	result.coords = coords;
+	result.isDamaged = rand() % 2;
+	// Teszt sink
+	result.isSink = true;
+	result.ship.coords = coords;
+	result.ship.orientation = 15;
+	result.ship.type = "Battleship";
+	// Player change
 	mListener->onPlayerChange(mPlayer, 1 - mPlayer);
 	mPlayer = 1 - mPlayer;
-	// Set
-	result.isDamaged = rand() % 2;
-	result.isSink = false;
-
-//	onBattleEnd();
-
+	// Return results
 	return result;
 }
 
-ShipHull* GameControl::createShip(Grid3D* grid, std::vector<size_t> coords)
+ShipHull* GameControl::createShip(Grid3D* grid, std::vector<size_t> coords, std::string type)
 {
 	//
 	auto player = getActivePlayer();
 	auto ship_index = mListSelections[player];
-	if (mShipNumbers[ship_index] == 0)
+	if (mShipNumbers[ship_index] == 0 && type == "")
 		return NULL;
 	mShipNumbers[ship_index]--;
 	// Get which type need to be made
-	auto ship = mShipyard.createShip(mShipyard.getNameOfShipType(ship_index), grid);
+	auto ship = mShipyard.createShip(type == "" ? mShipyard.getNameOfShipType(ship_index) : type, grid);
 	if (ship)
 	{
 		moveShipTo(ship, coords);
@@ -233,7 +244,7 @@ void GameControl::onSelectionChange(int player, unsigned selection)
 {
 	if (mPhase == GP_SET)
 	{
-		std::cout << "Player#" << player << ", SelectedShipId: " << selection << ", Ship type: " << mShipyard.getNameOfShipType(selection) << std::endl;
+		echof("Player#%d, SelectedShipId: %d, ShipType %s", player, selection, mShipyard.getNameOfShipType(selection).c_str());
 		mListSelections[player] = selection;
 	}
 }
@@ -333,9 +344,9 @@ void GameControl::onBattleStart()
 		mListener->onBattleStart();
 }
 
-void GameControl::onBattleEnd()
+void GameControl::onBattleEnd(int winnerPlayer)
 {
 	mPhase = GP_END;
 	if (mListener)
-		mListener->onBattleEnd();
+		mListener->onBattleEnd(winnerPlayer);
 }

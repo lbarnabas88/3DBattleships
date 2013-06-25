@@ -79,7 +79,7 @@ void GameState::onActivate()
 	// Activation of grids
 	gridA->activate();
 	gridB->deactivate();
-	gridB->getNode()->translate(2, 0, 0);
+	gridB->getNode()->translate(3, 0, 0);
 	// Add to listeners
 	OisFrameworkSingleton.addMouseListener(this);
 	OisFrameworkSingleton.addKeyListener(this);

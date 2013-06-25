@@ -8,6 +8,8 @@
 #ifndef GAMECONTROLLISTENER_HPP_
 #define GAMECONTROLLISTENER_HPP_
 
+#include "GameControlProvider.hpp"
+
 class GameControlListener
 {
 public:
@@ -18,7 +20,8 @@ public:
 	virtual void onSetCancel() = 0;
 	virtual void onShipCreated() = 0;
 	virtual void onBattleStart() = 0;
-	virtual void onBattleEnd() = 0;
+	virtual void onBattleEnd(int winnerPlayer) = 0;
+	virtual void onEnemyShot(GameControlProvider::FireResult fireResult) = 0;
 };
 
 #endif /* GAMECONTROLLISTENER_HPP_ */

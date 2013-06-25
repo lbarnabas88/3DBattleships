@@ -8,6 +8,10 @@
 #include "GameCoordinator.hpp"
 // Framework
 #include "../../../graphics/Ois/OisFramework.hpp"
+// Game Settings
+#include "../../../game/settings/GameSettings.hpp"
+// CEGUI
+#include "../../../graphics/Cegui/CeguiTranslator.hpp"
 
 #include <iostream>
 using namespace std;
@@ -53,7 +57,6 @@ void GameCoordinator::connectToShipLists(CEGUI::MultiColumnList* shipListA, CEGU
 	{
 		mShipControllers[1].setColumnList(shipListB);
 		mShipControllers[1].setDataProvider(provider);
-		mShipControllers[1].build();
 	}
 }
 
@@ -67,27 +70,18 @@ void GameCoordinator::onSelect(Grid3D* grid, size_t x, size_t y, size_t z)
 {
 	if (mControlProvider->getGamePhase() == GameControlProvider::GP_SET)
 	{
-		auto ship = mControlProvider->createShip(grid, { x, y, z });
-		if (ship)
-		{
-		}
-		else
-		{
-		}
+		mControlProvider->createShip(grid, { x, y, z });
 	}
 	else if (mControlProvider->getGamePhase() == GameControlProvider::GP_BATTLE)
 	{
-		GameControlProvider::FireResult result = mControlProvider->fireTorpedo( { x, y, z });
-		if (result.isDamaged)
-			grid->setMarkerAt(Grid3D::MT_RED, { x, y, z });
-		else
-			grid->setMarkerAt(Grid3D::MT_WHITE, { x, y, z });
+		processFireResult(mControlProvider->fireTorpedo( { x, y, z }));
 	}
 }
 
 void GameCoordinator::onNodeSearch(Ogre::SceneNode* foundNode)
 {
-	//
+	if (mControlProvider->getGamePhase() != GameControlProvider::GP_SET)
+		return;
 	auto ship = mControlProvider->getShipForNode(foundNode);
 	if (ship)
 	{
@@ -152,14 +146,9 @@ bool GameCoordinator::keyPressed(const OIS::KeyEvent &arg)
 		{
 			if (arg.key == OIS::KC_F1)
 			{
-				mControlProvider->fireTorpedo(vector<size_t>( { (size_t) rand() % 8, (size_t) rand() % 8, (size_t) rand() % 8 }));
+				processFireResult(mControlProvider->fireTorpedo(vector<size_t>( { (size_t) rand() % 8, (size_t) rand() % 8, (size_t) rand() % 8 })));
 			}
 		}
-	}
-
-	if (arg.key == OIS::KC_TAB)
-	{
-		// TODO toggle grids
 	}
 
 	return true;
@@ -224,6 +213,25 @@ void GameCoordinator::fireEventOnActiveGrid()
 	}
 }
 
+void GameCoordinator::processFireResult(GameControlProvider::FireResult fireResult)
+{
+	if (!fireResult.isValid)
+		return;
+	// Marker
+	if (fireResult.isDamaged)
+		mGrids[fireResult.playerOfGrid]->setMarkerAt(Grid3D::MT_RED, fireResult.coords);
+	else
+		mGrids[fireResult.playerOfGrid]->setMarkerAt(Grid3D::MT_WHITE, fireResult.coords);
+	// Sinked ship
+	if (fireResult.isSink)
+	{
+		auto ship = mControlProvider->createShip(mGrids[fireResult.playerOfGrid], fireResult.ship.coords, fireResult.ship.type);
+		assert(ship != NULL);
+		ship->setColor(ShipHull::SCLR_RED);
+		ship->setOrientationIndex(fireResult.ship.orientation);
+	}
+}
+
 // On Game Events
 void GameCoordinator::onPlayerChange(int playerFrom, int playerTo)
 {
@@ -253,8 +261,9 @@ void GameCoordinator::onSetCancel()
 
 void GameCoordinator::onShipCreated()
 {
-	if (mControlProvider)
-		mShipControllers[mControlProvider->getActivePlayer()].update();
+	if (mControlProvider->getGamePhase() == GameControlProvider::GP_SET)
+		if (mControlProvider)
+			mShipControllers[mControlProvider->getActivePlayer()].update();
 }
 
 void GameCoordinator::onBattleStart()
@@ -273,12 +282,20 @@ void GameCoordinator::onBattleStart()
 		shipListController.build();
 }
 
-void GameCoordinator::onBattleEnd()
+void GameCoordinator::onBattleEnd(int winnerPlayer)
 {
 	CEGUI::System::getSingleton().getGUISheet()->deactivate();
 	CEGUI::Window* menu = CEGUI::System::getSingleton().getGUISheet()->getChildRecursive("Game/Menu");
 	CEGUI::Window* end_text = CEGUI::System::getSingleton().getGUISheet()->getChildRecursive("Game/End");
 	menu->activate();
 	end_text->setVisible(true);
-	end_text->setText("Kisbogyo");
+	if (winnerPlayer == 0)
+		end_text->setText(utf8ToCeguiString(GameSettingsSingleton.getLanguage().textForCode("game.won")));
+	else
+		end_text->setText(utf8ToCeguiString(GameSettingsSingleton.getLanguage().textForCode("game.lost")));
+}
+
+void GameCoordinator::onEnemyShot(GameControlProvider::FireResult fireResult)
+{
+	processFireResult(fireResult);
 }

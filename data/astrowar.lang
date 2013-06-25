@@ -5,6 +5,8 @@ main.helloworld	Hello World!	Szevasz világ!
 general.cancel	Cancel	Mégse
 general.back	Back	Vissza
 general.?	???	???
+general.you	Yours	Saját
+general.enemy	Enemy	Ellenség
 mainmenu.singleplayer	Singleplayer	Egyjátékos
 mainmenu.multiplayer	Multiplayer	Többjátékos
 mainmenu.credits	Credits	Kreditlista
@@ -29,3 +31,5 @@ game.control.fire	Fire	Tűz
 game.ships.name.set	Ships to set	Hajók
 game.ships.name.battle	Fleet	Flotta
 game.ships.quantity	q	db
+game.won	You WIN	Gratulálok! Nyertél!
+game.lost	You LOST	Sajnos vesztettél!

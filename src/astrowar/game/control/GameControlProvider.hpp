@@ -29,18 +29,21 @@ public:
 	virtual void setDone() = 0;
 	struct FireResult
 	{
+		bool isValid;
+		int playerOfGrid;
+		std::vector<size_t> coords;
 		bool isDamaged;
 		bool isSink;
 		struct
 		{
-			Ogre::String type;
+			std::string type;
 			std::vector<size_t> coords;
 			size_t orientation;
 		} ship; // Only valid if isSink true
 	};
 	virtual FireResult fireTorpedo(std::vector<size_t> coords) = 0;
 	// Ship management
-	virtual ShipHull* createShip(Grid3D* grid, std::vector<size_t> coords) = 0;
+	virtual ShipHull* createShip(Grid3D* grid, std::vector<size_t> coords, std::string type = "") = 0;
 	virtual ShipHull* getShipForNode(Ogre::SceneNode* sceneNode) = 0;
 	// Move a ship
 	virtual void moveShipTo(ShipHull* ship, std::vector<size_t> coords) = 0;
