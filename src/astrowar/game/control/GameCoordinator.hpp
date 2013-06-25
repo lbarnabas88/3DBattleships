@@ -22,8 +22,6 @@ class GameCoordinatorListener
 {
 public:
 	virtual ~GameCoordinatorListener();
-	//
-	virtual void notifyOnGameChange() = 0;
 };
 
 class GameCoordinator: public Grid3DListener, public OIS::KeyListener, public GameControlListener

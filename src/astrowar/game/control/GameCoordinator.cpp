@@ -150,11 +150,16 @@ bool GameCoordinator::keyPressed(const OIS::KeyEvent &arg)
 	{
 		if (mControlProvider->getActivePlayer() == 1)
 		{
-			if (arg.key == OIS::KC_TAB)
+			if (arg.key == OIS::KC_F1)
 			{
 				mControlProvider->fireTorpedo(vector<size_t>( { (size_t) rand() % 8, (size_t) rand() % 8, (size_t) rand() % 8 }));
 			}
 		}
+	}
+
+	if (arg.key == OIS::KC_TAB)
+	{
+		// TODO toggle grids
 	}
 
 	return true;

@@ -58,7 +58,6 @@ int GameControl::getActivePlayer()
 
 void GameControl::setDone()
 {
-	mPhase = GP_BATTLE;
 	selectShip(NULL);
 	onBattleStart();
 }
@@ -73,8 +72,7 @@ GameControl::FireResult GameControl::fireTorpedo(std::vector<size_t> coords)
 	result.isDamaged = rand() % 2;
 	result.isSink = false;
 
-	mPhase = GP_END;
-	onBattleEnd();
+//	onBattleEnd();
 
 	return result;
 }
@@ -330,12 +328,14 @@ void GameControl::onShipCreated()
 
 void GameControl::onBattleStart()
 {
+	mPhase = GP_BATTLE;
 	if (mListener)
 		mListener->onBattleStart();
 }
 
 void GameControl::onBattleEnd()
 {
+	mPhase = GP_END;
 	if (mListener)
 		mListener->onBattleEnd();
 }

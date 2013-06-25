@@ -292,7 +292,7 @@ bool Grid3D::isActive() const
 void Grid3D::setActive(bool isActive)
 {
 	mIsActive = isActive;
-	mSceneNode->setVisible(isActive);
+	setMarkerVisible(isActive);
 }
 
 void Grid3D::activate()
@@ -353,7 +353,6 @@ void Grid3D::setMarkerAt(MarkerType fieldType, std::vector<size_t> coords)
 			marker->node->attachObject(marker->entity);
 			marker->node->setPosition(coords2position(coords));
 			marker->node->setScale(0.2f, 0.2f, 0.2f);
-			marker->node->setVisible(false);
 		}
 	}
 }

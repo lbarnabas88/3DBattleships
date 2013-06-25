@@ -24,13 +24,11 @@
 // STD
 #include <vector>
 
-class GameState: public OgreState, public OIS::MouseListener, public OIS::KeyListener, public GameCoordinatorListener
+class GameState: public OgreState, public OIS::MouseListener, public OIS::KeyListener
 {
 public:
 	GameState(sf::Socket* connectedPlayerSocket = NULL);
 	virtual ~GameState();
-	// Notify if game changed
-	void notifyOnGameChange();
 protected:
 	// State
 	void onActivate();
@@ -48,9 +46,12 @@ protected:
 	bool backButtonHandler(const CEGUI::EventArgs& arg);
 	// Torpedo
 	std::shared_ptr<Grid3D> gridA, gridB;
+	void toggleGrids();
 	// Camera
 	Ogre::Camera* mCamera;
 	Ogre::SceneNode* mCameraNode;
+	Ogre::Vector3 mCameraDestination;
+	bool mIsCameraMoving;
 	// Players
 	sf::Socket* mNetPlayerSocket;
 	// Game control

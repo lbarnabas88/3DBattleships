@@ -20,7 +20,7 @@ using namespace Ogre;
 using namespace CEGUI;
 
 GameState::GameState(sf::Socket* connectedPlayerSocket) :
-		OgreState("GameState"), mCamera(NULL), mCameraNode(NULL), mNetPlayerSocket(connectedPlayerSocket), mControl(NULL), mCoordinator(NULL)
+		OgreState("GameState"), mCamera(NULL), mCameraNode(NULL), mIsCameraMoving(false), mNetPlayerSocket(connectedPlayerSocket), mControl(NULL), mCoordinator(NULL)
 {
 	// Create light
 	Light* l = mSceneManager->createLight("MainLight");
@@ -31,24 +31,6 @@ GameState::GameState(sf::Socket* connectedPlayerSocket) :
 
 GameState::~GameState()
 {
-}
-
-// Notify if game changed
-void GameState::notifyOnGameChange()
-{
-//	if (mControlProvider->getGamePhase() == 1)
-//	{
-	if (mControl->getActivePlayer() == 0)
-	{
-		gridA->activate();
-		gridB->deactivate();
-	}
-	else
-	{
-		gridA->deactivate();
-		gridB->activate();
-	}
-//	}
 }
 
 void GameState::onActivate()
@@ -66,16 +48,18 @@ void GameState::onActivate()
 	mCamera->setAutoAspectRatio(true);
 	auto viewport = getViewport(0);
 	viewport->setBackgroundColour(ColourValue(0.1, 0.4, 0.7));
-
 	// CEGUI System singleton
 	CEGUI::System& guiSys = CEGUI::System::getSingleton();
 	// Init main menu
 	guiSys.executeScriptFile("init_game.lua");
 	// Translate windgets text
 	translateCeguiWindow(guiSys.getGUISheet());
-
+	// Camera node
 	mCameraNode = mSceneManager->getRootSceneNode()->createChildSceneNode("Camera Node");
 	mCameraNode->attachObject(mCamera);
+	// Camera Move
+	mIsCameraMoving = false;
+	mCameraDestination = mCameraNode->getPosition();
 	// Create grids
 	size_t dim = 8;
 	std::vector<size_t> dimensions = { dim, dim, dim };
@@ -95,6 +79,7 @@ void GameState::onActivate()
 	// Activation of grids
 	gridA->activate();
 	gridB->deactivate();
+	gridB->getNode()->translate(2, 0, 0);
 	// Add to listeners
 	OisFrameworkSingleton.addMouseListener(this);
 	OisFrameworkSingleton.addKeyListener(this);
@@ -120,7 +105,7 @@ void GameState::onActivate()
 	mCoordinator->connectToShipLists(shipList1, shipList2, mControl);
 	// Set coordinstor
 	mCoordinator->setControlProvider(mControl);
-	mCoordinator->setListener(this);
+//	mCoordinator->setListener(this);
 	mCoordinator->connectToCameraNode(mCameraNode);
 	mControl->setListener(mCoordinator);
 }
@@ -151,6 +136,18 @@ bool GameState::frameRenderingQueued(const Ogre::FrameEvent& evt)
 {
 	gridA->update(evt.timeSinceLastFrame);
 	gridB->update(evt.timeSinceLastFrame);
+	// Move camera
+	if (mIsCameraMoving)
+	{
+		Ogre::Vector3 v = mCameraDestination - mCameraNode->getPosition();
+		v = v * 5 / v.length();
+		mCameraNode->setPosition(mCameraNode->getPosition() + v * evt.timeSinceLastFrame);
+		if (mCameraNode->getPosition().distance(mCameraDestination) < 0.1f)
+		{
+			mCameraNode->setPosition(mCameraDestination);
+			mIsCameraMoving = false;
+		}
+	}
 	return true;
 }
 
@@ -177,6 +174,8 @@ bool GameState::mouseReleased(const OIS::MouseEvent &arg, OIS::MouseButtonID id)
 
 bool GameState::keyPressed(const OIS::KeyEvent &arg)
 {
+	if (arg.key == OIS::KC_TAB)
+		toggleGrids();
 	return true;
 }
 
@@ -190,4 +189,13 @@ bool GameState::backButtonHandler(const CEGUI::EventArgs& arg)
 {
 	popState();
 	return true;
+}
+
+void GameState::toggleGrids()
+{
+	mIsCameraMoving = true;
+	if (mCameraDestination.distance(gridA->getNode()->getPosition()) < mCameraDestination.distance(gridB->getNode()->getPosition()))
+		mCameraDestination = gridB->getNode()->getPosition();
+	else
+		mCameraDestination = gridA->getNode()->getPosition();
 }
