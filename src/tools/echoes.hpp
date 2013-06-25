@@ -15,10 +15,10 @@
 #endif
 // Echo functions
 #ifndef NDEBUG
-#define echo(s) fprintf(stdout, (std::string(s) + "\n").c_str())
-#define echof(s,...) fprintf(stdout, (std::string(s) + "\n").c_str(),__VA_ARGS__)
-#define echor(e) fprintf(stderr, (std::string(e) + "\n").c_str())
-#define echorf(e,...) fprintf(stderr, (std::string(e) + "\n").c_str(), __VA_ARGS__)
+#define echo(s) fprintf(stdout, (std::string(s) + "\n").c_str()); fflush(stdout)
+#define echof(s,...) fprintf(stdout, (std::string(s) + "\n").c_str(),__VA_ARGS__); fflush(stdout)
+#define echor(e) fprintf(stderr, (std::string(e) + "\n").c_str()); fflush(stderr)
+#define echorf(e,...) fprintf(stderr, (std::string(e) + "\n").c_str(), __VA_ARGS__); fflush(stderr)
 #else
 #define echo(s) void(0)
 #define echof(s,...) void(0)

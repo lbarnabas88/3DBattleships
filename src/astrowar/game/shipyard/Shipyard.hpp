@@ -36,6 +36,8 @@ public:
 	std::string getNameOfShipType(size_t i) const;
 	// Ship get
 	ShipHull* getShip(Ogre::SceneNode* sceneNode);
+	size_t getNumOfShips() const;
+	ShipHull* getShip(size_t index);
 private:
 	std::vector<std::pair<std::string, ShipTypeDescription> > mShipTypes;
 	std::vector<ShipHull*> mShips;

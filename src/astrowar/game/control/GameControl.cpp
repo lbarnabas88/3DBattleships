@@ -81,6 +81,10 @@ GameControl::FireResult GameControl::fireTorpedo(std::vector<size_t> coords)
 	result.ship.coords = coords;
 	result.ship.orientation = 15;
 	result.ship.type = "Battleship";
+	if (mPlayer == 0)
+		result.sunkenShip = NULL;
+	else
+		result.sunkenShip = mShipyard.getShip(size_t(0));
 	// Player change
 	mListener->onPlayerChange(mPlayer, 1 - mPlayer);
 	mPlayer = 1 - mPlayer;
@@ -95,7 +99,8 @@ ShipHull* GameControl::createShip(Grid3D* grid, std::vector<size_t> coords, std:
 	auto ship_index = mListSelections[player];
 	if (mShipNumbers[ship_index] == 0 && type == "")
 		return NULL;
-	mShipNumbers[ship_index]--;
+	if (type == "")
+		mShipNumbers[ship_index]--;
 	// Get which type need to be made
 	auto ship = mShipyard.createShip(type == "" ? mShipyard.getNameOfShipType(ship_index) : type, grid);
 	if (ship)
@@ -340,6 +345,9 @@ void GameControl::onShipCreated()
 void GameControl::onBattleStart()
 {
 	mPhase = GP_BATTLE;
+
+	mShipNumbers[0] = 2;
+
 	if (mListener)
 		mListener->onBattleStart();
 }

@@ -40,6 +40,7 @@ public:
 			std::vector<size_t> coords;
 			size_t orientation;
 		} ship; // Only valid if isSink true
+		ShipHull* sunkenShip;
 	};
 	virtual FireResult fireTorpedo(std::vector<size_t> coords) = 0;
 	// Ship management

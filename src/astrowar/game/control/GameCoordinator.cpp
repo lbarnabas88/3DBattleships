@@ -225,10 +225,18 @@ void GameCoordinator::processFireResult(GameControlProvider::FireResult fireResu
 	// Sinked ship
 	if (fireResult.isSink)
 	{
-		auto ship = mControlProvider->createShip(mGrids[fireResult.playerOfGrid], fireResult.ship.coords, fireResult.ship.type);
+		ShipHull* ship = fireResult.sunkenShip;
+		if (!ship)
+			ship = mControlProvider->createShip(mGrids[fireResult.playerOfGrid], fireResult.ship.coords, fireResult.ship.type);
 		assert(ship != NULL);
 		ship->setColor(ShipHull::SCLR_RED);
-		ship->setOrientationIndex(fireResult.ship.orientation);
+		if (!fireResult.sunkenShip)
+		{
+			ship->setOrientationIndex(fireResult.ship.orientation);
+		}
+		// Update ship lists
+		for (auto shipListController : mShipControllers)
+			shipListController.update();
 	}
 }
 

@@ -84,3 +84,15 @@ ShipHull* Shipyard::getShip(Ogre::SceneNode* sceneNode)
 			return ship;
 	return NULL;
 }
+
+size_t Shipyard::getNumOfShips() const
+{
+	return mShips.size();
+}
+
+ShipHull* Shipyard::getShip(size_t index)
+{
+	if (index > getNumOfShips())
+		return NULL;
+	return mShips[index];
+}

@@ -140,7 +140,7 @@ bool GameState::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	if (mIsCameraMoving)
 	{
 		Ogre::Vector3 v = mCameraDestination - mCameraNode->getPosition();
-		v = v * 5 / v.length();
+		v = v * 15 / v.length();
 		mCameraNode->setPosition(mCameraNode->getPosition() + v * evt.timeSinceLastFrame);
 		if (mCameraNode->getPosition().distance(mCameraDestination) < 0.1f)
 		{

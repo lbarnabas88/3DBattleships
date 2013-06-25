@@ -10,6 +10,8 @@
 #include "../../../game/settings/GameSettings.hpp"
 // CEGUI
 #include "../../../graphics/Cegui/CeguiTranslator.hpp"
+// ECHO
+#include "../../../tools/echoes.hpp"
 
 //*****************************************************
 //*** Ship List Controller Data Provider
@@ -103,9 +105,14 @@ void ShipListController::clear()
 	// If nil do nothing
 	if (!mColumnList)
 		return;
+	// Echo
+	echof("Columns: %d, Rows: %d", mColumnList->getRowCount(), mColumnList->getRowCount());
 	// Clear all column
+	while (mColumnList->getRowCount() > 0)
+		mColumnList->removeRow(0);
 	while (mColumnList->getColumnCount() > 0)
 		mColumnList->removeColumn(0);
+	mColumnList->resetList();
 }
 
 // Upate
@@ -113,10 +120,13 @@ void ShipListController::update()
 {
 	if (!mColumnList || !mDataProvider)
 		return;
+	echof("Rows: %d", mColumnList->getRowCount());
 	for (unsigned i = 0; i < mColumnList->getRowCount(); ++i)
 	{
 		auto row = mColumnList->getItemAtGridReference(CEGUI::MCLGridRef(i, 1));
-		row->setText(utf8ToCeguiString(utils::t2str(mDataProvider->getShipTypeCount(mPlayer, i))));
+		echof("RowId: %d, ColumnId: %d, Row: %p", i, 1, row);
+		if (row)
+			row->setText(utf8ToCeguiString(utils::t2str(mDataProvider->getShipTypeCount(mPlayer, i))));
 	}
 	mColumnList->invalidate(true);
 }
