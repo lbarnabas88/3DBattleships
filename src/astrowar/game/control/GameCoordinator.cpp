@@ -233,12 +233,15 @@ void GameCoordinator::processFireResult(GameControlProvider::FireResult fireResu
 // On Game Events
 void GameCoordinator::onPlayerChange(int playerFrom, int playerTo)
 {
-	mGrids[1 - playerFrom]->deactivate();
-	mGrids[1 - playerTo]->activate();
-	mGrids[0]->setMarkerVisible(false);
+	if (mControlProvider->getGamePhase() == GameControlProvider::GP_BATTLE)
+	{
+		mGrids[1 - playerFrom]->deactivate();
+		mGrids[1 - playerTo]->activate();
+		mGrids[0]->setMarkerVisible(false);
 
-	CEGUI::Window* control_panel = CEGUI::System::getSingleton().getGUISheet()->getChildRecursive("Game/Control/Battle");
-	control_panel->setEnabled(playerTo == 0);
+		CEGUI::Window* control_panel = CEGUI::System::getSingleton().getGUISheet()->getChildRecursive("Game/Control/Battle");
+		control_panel->setEnabled(playerTo == 0);
+	}
 }
 
 void GameCoordinator::onSetReady()
