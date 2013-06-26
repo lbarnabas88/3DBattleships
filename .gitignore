@@ -11,3 +11,4 @@ config/ogre.cfg
 # Eclipse stuff
 .project
 .cproject
+*.so*
