@@ -13,6 +13,7 @@
 #include "../elements/Pair.h"
 
 #include <iostream>
+#include <fstream>
 using namespace std;
 
 namespace AstrOWar {
@@ -46,6 +47,8 @@ public:
 	Ship* getShipObjectWithPosition(int x, int y, int z);
 	bool isValidShip(Ship* s);
 	void addShipToFoe(Ship* s, int _x, int _y, int _z);
+
+	void dump();
 };
 
 } /* namespace AstrOWar */

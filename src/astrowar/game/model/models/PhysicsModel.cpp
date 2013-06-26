@@ -229,4 +229,43 @@ void PhysicsModel::toString() {
 
 }
 
+void PhysicsModel::dump() {
+	ofstream o("phisicsModelDump.txt");
+	o << "MyCube" << endl;
+
+	for (unsigned int i = 0; i < cubeMy.size(); i++) {
+		cout << "" << endl;
+		cout << "X: " << i << endl;
+		for (unsigned int j = 0; j < cubeMy[i].size(); j++) {
+			for (unsigned int k = 0; k < cubeMy[i][j].size(); k++) {
+				cout << cubeMy[i][j][k]->toString() << " " << endl;
+			}
+			cout << endl;
+		}
+	}
+	cout
+			<< "______________________________________________________________________"
+			<< endl;
+	o << "FoeCube" << endl;
+
+	for (unsigned int i = 0; i < cubeFoe.size(); i++) {
+		cout << "" << endl;
+		cout << "X: " << i << endl;
+		for (unsigned int j = 0; j < cubeFoe[i].size(); j++) {
+			for (unsigned int k = 0; k < cubeFoe[i][j].size(); k++) {
+				cout << cubeFoe[i][j][k]->toString() << " " << endl;
+			}
+			cout << endl;
+		}
+	}
+	cout
+			<< "______________________________________________________________________"
+			<< endl;
+	for (Ship* s : myShips) {
+		s->toString();
+	}
+
+	o.close();
+}
+
 } /* namespace AstrOWar */

@@ -73,6 +73,7 @@ bool GameModel::isValidShip(int id) {
 	}
 	if (hajo == nullptr)
 		return false;
+	pModel->dump();
 	return pModel->isValidShip(hajo);
 }
 
