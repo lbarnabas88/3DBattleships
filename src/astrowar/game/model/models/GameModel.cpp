@@ -22,10 +22,13 @@ GameModel::GameModel() {
 GameModel::~GameModel() {
 }
 
-void GameModel::init(GameModelListener *g) {
-	gml = g;
+void GameModel::init() {
 	JSON::JSONSingleton.parse("config/astrowar.json", &kollekcio);
 	nModel->registerMessageEventHandler(&GameModel::messageEventHandler);
+}
+
+void GameModel::setListener(GameModelListener *g){
+	gml = g;
 }
 
 /*

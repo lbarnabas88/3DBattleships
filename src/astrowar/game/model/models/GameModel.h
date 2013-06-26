@@ -60,7 +60,7 @@ protected:
 public:
 
 	static GameModel& getSingleton();
-	void init(GameModelListener *g);
+	void init();
 	void createTeszt();
 
 	void setSocket(sf::TcpSocket *mSocket, bool _iss);
@@ -77,6 +77,7 @@ public:
 	void start();
 
 	vector<Ship> getCollection();
+	void setListener(GameModelListener *g);
 };
 
 extern GameModel& GameModelSingleton;
