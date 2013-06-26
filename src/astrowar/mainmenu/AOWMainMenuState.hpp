@@ -47,6 +47,7 @@ private:
 	// Network parameters
 	std::pair<std::string, unsigned short> mAddress;
 	sf::TcpSocket mSocket;
+	bool mIsServer;
 	bool mSocketConnected;
 	// Game Sharting
 	bool mShouldStartGame;

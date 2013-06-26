@@ -27,7 +27,7 @@
 class GameState: public OgreState, public OIS::MouseListener, public OIS::KeyListener
 {
 public:
-	GameState(sf::Socket* connectedPlayerSocket = NULL);
+	GameState(sf::TcpSocket* connectedPlayerSocket, bool isServer);
 	virtual ~GameState();
 protected:
 	// State
@@ -53,7 +53,7 @@ protected:
 	Ogre::Vector3 mCameraDestination;
 	bool mIsCameraMoving;
 	// Players
-	sf::Socket* mNetPlayerSocket;
+	sf::TcpSocket* mNetPlayerSocket;
 	// Game control
 	GameControl* mControl;
 	// Game coordinator
