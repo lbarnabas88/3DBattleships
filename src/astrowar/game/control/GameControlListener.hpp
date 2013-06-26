@@ -21,7 +21,7 @@ public:
 	virtual void onShipCreated() = 0;
 	virtual void onBattleStart() = 0;
 	virtual void onBattleEnd(int winnerPlayer) = 0;
-	virtual void onEnemyShot(GameControlProvider::FireResult fireResult) = 0;
+	virtual void onShot(GameControlProvider::FireResult fireResult) = 0;
 };
 
 #endif /* GAMECONTROLLISTENER_HPP_ */

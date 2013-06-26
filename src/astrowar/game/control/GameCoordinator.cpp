@@ -74,7 +74,7 @@ void GameCoordinator::onSelect(Grid3D* grid, size_t x, size_t y, size_t z)
 	}
 	else if (mControlProvider->getGamePhase() == GameControlProvider::GP_BATTLE)
 	{
-		processFireResult(mControlProvider->fireTorpedo( { x, y, z }));
+		mControlProvider->fireTorpedo( { x, y, z });
 	}
 }
 
@@ -98,7 +98,8 @@ std::vector<int> GameCoordinator::convertDirection(std::vector<int> direction)
 	auto cam_ori = mCameraNode->getOrientation();
 
 	vector<Ogre::Vector3> locals = { cam_ori.xAxis(), cam_ori.yAxis(), cam_ori.zAxis() };
-	vector<Ogre::Vector3> globals = { Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Y, Ogre::Vector3::UNIT_Z, -Ogre::Vector3::UNIT_X, -Ogre::Vector3::UNIT_Y, -Ogre::Vector3::UNIT_Z };
+	vector<Ogre::Vector3> globals = { Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Y, Ogre::Vector3::UNIT_Z, -Ogre::Vector3::UNIT_X, -Ogre::Vector3::UNIT_Y,
+										-Ogre::Vector3::UNIT_Z };
 	vector<std::string> axis_names = { "X", "Y", "Z", "-X", "-Y", "-Z" };
 	for (size_t i = 0; i < locals.size(); ++i)
 	{
@@ -138,17 +139,6 @@ bool GameCoordinator::keyPressed(const OIS::KeyEvent &arg)
 			mControlProvider->moveSelectedShipBy(convertDirection( { 0, 0, 1 }));
 		if (arg.key == OIS::KC_E || arg.key == OIS::KC_PGUP || arg.key == OIS::KC_NUMPAD9)
 			mControlProvider->moveSelectedShipBy(convertDirection( { 0, 0, -1 }));
-	}
-
-	if (mControlProvider->getGamePhase() == GameControlProvider::GP_BATTLE)
-	{
-		if (mControlProvider->getActivePlayer() == 1)
-		{
-			if (arg.key == OIS::KC_F1)
-			{
-				processFireResult(mControlProvider->fireTorpedo(vector<size_t>( { (size_t) rand() % 8, (size_t) rand() % 8, (size_t) rand() % 8 })));
-			}
-		}
 	}
 
 	return true;
@@ -254,7 +244,8 @@ void GameCoordinator::onPlayerChange(int playerFrom, int playerTo)
 void GameCoordinator::onSetReady()
 {
 	// Ready Button
-	CEGUI::PushButton* readyButton = static_cast<CEGUI::PushButton*>(CEGUI::System::getSingleton().getGUISheet()->getChildRecursive("Game/Control/Set/ReadyButton"));
+	CEGUI::PushButton* readyButton = static_cast<CEGUI::PushButton*>(CEGUI::System::getSingleton().getGUISheet()->getChildRecursive(
+			"Game/Control/Set/ReadyButton"));
 	if (readyButton)
 		readyButton->setEnabled(true);
 }
@@ -262,7 +253,8 @@ void GameCoordinator::onSetReady()
 void GameCoordinator::onSetCancel()
 {
 	// Ready Button
-	CEGUI::PushButton* readyButton = static_cast<CEGUI::PushButton*>(CEGUI::System::getSingleton().getGUISheet()->getChildRecursive("Game/Control/Set/ReadyButton"));
+	CEGUI::PushButton* readyButton = static_cast<CEGUI::PushButton*>(CEGUI::System::getSingleton().getGUISheet()->getChildRecursive(
+			"Game/Control/Set/ReadyButton"));
 	if (readyButton)
 		readyButton->setEnabled(false);
 }
@@ -299,11 +291,13 @@ void GameCoordinator::onBattleEnd(int winnerPlayer)
 	end_text->setVisible(true);
 	if (winnerPlayer == 0)
 		end_text->setText(utf8ToCeguiString(GameSettingsSingleton.getLanguage().textForCode("game.won")));
-	else
+	else if (winnerPlayer == 1)
 		end_text->setText(utf8ToCeguiString(GameSettingsSingleton.getLanguage().textForCode("game.lost")));
+	else
+		end_text->setText(utf8ToCeguiString(GameSettingsSingleton.getLanguage().textForCode("game.quit")));
 }
 
-void GameCoordinator::onEnemyShot(GameControlProvider::FireResult fireResult)
+void GameCoordinator::onShot(GameControlProvider::FireResult fireResult)
 {
 	processFireResult(fireResult);
 }

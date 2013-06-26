@@ -25,7 +25,7 @@ public:
 	virtual bool isSetReady();
 	virtual int getActivePlayer();
 	virtual void setDone();
-	virtual FireResult fireTorpedo(std::vector<size_t> coords);
+	virtual void fireTorpedo(std::vector<size_t> coords);
 	// Control Provider Ships
 	virtual ShipHull* createShip(Grid3D* grid, std::vector<size_t> coords, std::string type = "");
 	ShipHull* getShipForNode(Ogre::SceneNode* sceneNode);
@@ -76,6 +76,10 @@ public:
 	 * hiba esetén, hibakóddal
 	 */
 	virtual void onErrorEvent(int error);
+	/*
+	 * a hálózat állapotát adja meg
+	 */
+	virtual void onNetworkEvent(bool success);
 private:
 	// Check if ship is on a valid position
 	bool isShipValid(ShipHull* ship);
@@ -96,14 +100,25 @@ private:
 	void onShipCreated();
 	void onBattleStart();
 	void onBattleEnd(int winnerPlayer);
-	void onEnemyShot(FireResult fireResult);
+	void onShot(FireResult fireResult);
 	bool mPrevReady;
 	// Game Phase
 	GameControlProvider::GamePhase mPhase;
 	// Ship numbers
 	std::vector<size_t> mShipNumbers;
 	std::vector<size_t> mInitShipNumbers;
+	void setPlayer(int player);
 	int mPlayer;
+	// Ships
+	struct ShipPair
+	{
+		int iD;
+		ShipHull* hull;
+	};
+	std::vector<ShipPair> mShips;
+	ShipHull* getShipForId(int id);
+	int getIdForShip(ShipHull* hull);
+	void addShip(int id, ShipHull* hull);
 };
 
 #endif /* GAMECONTROL_HPP_ */
