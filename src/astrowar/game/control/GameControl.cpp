@@ -313,7 +313,7 @@ void GameControl::onHitEvent(int x, int y, int z, bool damaged, bool sunken)
  */
 void GameControl::onDeadEvent(bool won)
 {
-	onBattleEnd(won ? 0 : 1);
+	onBattleEnd(won ? 1 : 0);
 }
 /*
  * játékos kilépése esetén
