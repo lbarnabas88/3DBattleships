@@ -62,7 +62,7 @@ bool GameControl::isSetReady()
 	if (sum != 0)
 		return false;
 	for (auto& ship : mShips)
-		if (checkShip(ship.hull))
+		if (!isShipValid(ship.hull))
 			return false;
 	return true;
 }
@@ -99,7 +99,6 @@ ShipHull* GameControl::createShip(Grid3D* grid, std::vector<size_t> coords, std:
 	{
 		moveShipTo(ship, coords);
 		onShipCreated();
-
 		// Model
 		if (getGamePhase() == GP_SET)
 		{
@@ -357,16 +356,14 @@ bool GameControl::isShipValid(ShipHull* ship)
 }
 
 // Color shipt to correct color
-bool GameControl::checkShip(ShipHull* ship)
+void GameControl::checkShip(ShipHull* ship)
 {
 	// If ship NULL to nothing
 	if (!ship)
-		return false;
-	// Result
-	bool ok = isShipValid(ship);
+		return;
 	// Color ship
 	ShipHull::ShipColor ship_color = ShipHull::SCLR_DEFAULT;
-	if (ok)
+	if (isShipValid(ship))
 	{
 		if (mSelectedShip == ship)
 			ship_color = ShipHull::SCLR_CYAN;
@@ -388,7 +385,6 @@ bool GameControl::checkShip(ShipHull* ship)
 	if (!act_ready && mPrevReady)
 		onSetCancel();
 	mPrevReady = act_ready;
-	return ok;
 }
 
 void GameControl::colorOnSelection(ShipHull* ship)

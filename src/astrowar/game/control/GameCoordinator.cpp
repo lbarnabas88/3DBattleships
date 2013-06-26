@@ -246,11 +246,14 @@ void GameCoordinator::onPlayerChange(int playerFrom, int playerTo)
 
 void GameCoordinator::onSetReady()
 {
+	cout << "asdf" << endl;
 	// Ready Button
 	CEGUI::PushButton* readyButton = static_cast<CEGUI::PushButton*>(CEGUI::System::getSingleton().getGUISheet()->getChildRecursive(
 			"Game/Control/Set/ReadyButton"));
+	cout << "asdf2" << endl;
 	if (readyButton)
 		readyButton->setEnabled(true);
+	cout << "asdf3" << endl;
 }
 
 void GameCoordinator::onSetCancel()
