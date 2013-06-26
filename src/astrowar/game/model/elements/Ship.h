@@ -29,6 +29,7 @@ protected:
 	int id;
 	int x, y, z;		// mátrix segédek
 	int type;
+	int max;
 	std::string mesh;
 	std::vector<std::vector<int> > structure;
 	std::vector<Field*> mezok;
@@ -43,6 +44,7 @@ public:
 	void setX(int i);
 	void setY(int i);
 	void setZ(int i);
+	void setMax(int i);
 	void setType(int i);
 	void setMesh(std::string str);
 	void setStructure(vector<vector<int> > v);
@@ -55,6 +57,7 @@ public:
 	int getX();
 	int getY();
 	int getZ();
+	int getMax();
 	int getType();
 	bool isNew();
 	bool isDead();

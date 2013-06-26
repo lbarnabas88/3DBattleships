@@ -76,11 +76,15 @@ int Ship::getZ() {
 std::string Ship::getMesh() {
 	return mesh;
 }
-
 int Ship::getType() {
 	return type;
 }
-
+int Ship::getMax() {
+	return max;
+}
+void Ship::setMax(int i) {
+	max = i;
+}
 void Ship::setType(int i) {
 	type = i;
 }

@@ -1,0 +1,30 @@
+{
+	"version":0.1,
+	"ships":
+	[
+		{
+			"name":"Fighter",
+			"info":"fighter.json"
+		},
+		{
+			"name":"Destroyer",
+			"info":"destroyer.json"
+		},
+		{
+			"name":"Cruiser",
+			"info":"cruiser.json"
+		},
+		{
+			"name":"Battleship",
+			"info":"battleship.json"
+		},
+		{
+			"name":"Station",
+			"info":"station.json"
+		},
+		{
+			"name":"Carrier",
+			"info":"carrier.json"
+		}
+	]
+}
