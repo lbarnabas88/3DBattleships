@@ -73,6 +73,7 @@ int Parser::parseShip(std::string path, AstrOWar::Ship &h) {
 	h.setZ(json_integer_value(z));
 	h.setMesh(json_string_value(mesh));
 	h.setType(json_integer_value(type));
+	h.setMax(json_integer_value(max));
 
 	int _x = 0, _z = 0;
 	_x = json_integer_value(x);
