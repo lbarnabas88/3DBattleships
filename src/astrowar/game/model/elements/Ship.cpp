@@ -24,6 +24,7 @@ Ship* Ship::_clone(Ship *s, int _id) {
 	setMesh(s->getMesh());
 	setStructure(s->getStructure());
 	id = _id;
+	setType(s->getType());
 	return this;
 }
 

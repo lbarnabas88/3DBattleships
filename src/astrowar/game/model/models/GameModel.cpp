@@ -225,8 +225,9 @@ void GameModel::messageEventHandlerFIRESUCESS(Message &m) {
 			youtNext = false;
 			Ship *t = nullptr;
 			for (Ship s : kollekcio) {
+				echo(utils::t2str(s.getType()) + " *** " + utils::t2str(m.getType()));
 				if (s.getType() == m.getType())
-					t = &s;
+					t = s.clone(GameModel::shipIdCounter++);
 			}
 			if (t != nullptr)
 				pModel->addShipToFoe(t, m.getPosX(), m.getPosY(), m.getPosZ());
