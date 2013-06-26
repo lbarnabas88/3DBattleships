@@ -35,7 +35,8 @@ Grid3DListener::~Grid3DListener()
 //**************************/
 char sId = 'A';
 
-void createGridOneDirection(Ogre::ManualObject* shape, Ogre::Vector3 a, Ogre::Vector3 b, Ogre::Vector3 c, size_t na, size_t nb, Ogre::Vector3 offset, Ogre::ColourValue colour)
+void createGridOneDirection(Ogre::ManualObject* shape, Ogre::Vector3 a, Ogre::Vector3 b, Ogre::Vector3 c, size_t na, size_t nb, Ogre::Vector3 offset,
+		Ogre::ColourValue colour)
 {
 	// Assert if shape is NULL
 	assert(shape != NULL);
@@ -61,12 +62,16 @@ Grid3D::Grid3D(Ogre::SceneManager* scene_manager, Ogre::Camera* camera, std::vec
 	// Create the manual object for grid
 	mGridShape = mSceneManager->createManualObject(string("Grid") + sId);
 	// Create the grid
-	mOffset = Ogre::Vector3::NEGATIVE_UNIT_X * mDimensions[0] / 2.0 + Ogre::Vector3::NEGATIVE_UNIT_Y * mDimensions[1] / 2.0 + Ogre::Vector3::NEGATIVE_UNIT_Z * mDimensions[2] / 2.0;
+	mOffset = Ogre::Vector3::NEGATIVE_UNIT_X * mDimensions[0] / 2.0 + Ogre::Vector3::NEGATIVE_UNIT_Y * mDimensions[1] / 2.0
+			+ Ogre::Vector3::NEGATIVE_UNIT_Z * mDimensions[2] / 2.0;
 	mGridShape->begin("BaseWhiteNoLighting", Ogre::RenderOperation::OT_LINE_LIST);
 	{
-		createGridOneDirection(mGridShape, Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Y, mDimensions[2] * Ogre::Vector3::UNIT_Z, mDimensions[0], mDimensions[1], mOffset, colour);
-		createGridOneDirection(mGridShape, Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Z, mDimensions[1] * Ogre::Vector3::UNIT_Y, mDimensions[0], mDimensions[2], mOffset, colour);
-		createGridOneDirection(mGridShape, Ogre::Vector3::UNIT_Y, Ogre::Vector3::UNIT_Z, mDimensions[0] * Ogre::Vector3::UNIT_X, mDimensions[1], mDimensions[2], mOffset, colour);
+		createGridOneDirection(mGridShape, Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Y, mDimensions[2] * Ogre::Vector3::UNIT_Z, mDimensions[0], mDimensions[1],
+				mOffset, colour);
+		createGridOneDirection(mGridShape, Ogre::Vector3::UNIT_X, Ogre::Vector3::UNIT_Z, mDimensions[1] * Ogre::Vector3::UNIT_Y, mDimensions[0], mDimensions[2],
+				mOffset, colour);
+		createGridOneDirection(mGridShape, Ogre::Vector3::UNIT_Y, Ogre::Vector3::UNIT_Z, mDimensions[0] * Ogre::Vector3::UNIT_X, mDimensions[1], mDimensions[2],
+				mOffset, colour);
 	}
 	mGridShape->end();
 
@@ -340,20 +345,16 @@ void Grid3D::setMarkerAt(MarkerType fieldType, std::vector<size_t> coords)
 	}
 	else
 	{
-		if (marker)
-		{
-			marker->entity->setMaterialName(markerTypeToMaterialName(fieldType));
-		}
-		else
+		if (!marker)
 		{
 			marker = new Marker;
 			marker->entity = mSceneManager->createEntity("Sphere.mesh");
-			marker->entity->setMaterialName(markerTypeToMaterialName(fieldType));
 			marker->node = mSceneNode->createChildSceneNode();
 			marker->node->attachObject(marker->entity);
 			marker->node->setPosition(coords2position(coords));
 			marker->node->setScale(0.2f, 0.2f, 0.2f);
 		}
+		marker->entity->setMaterialName(markerTypeToMaterialName(fieldType));
 	}
 }
 

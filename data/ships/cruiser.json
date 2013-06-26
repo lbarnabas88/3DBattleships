@@ -1,6 +1,6 @@
 {
 	"name" : "Cruiser",
-	"max": 1,
+	"max": 0,
 	"type" : 3,
 	"size" : {
 		"x" : 1,

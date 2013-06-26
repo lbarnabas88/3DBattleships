@@ -429,11 +429,10 @@ void GameControl::onShipCreated()
 void GameControl::onBattleStart()
 {
 	mPhase = GP_BATTLE;
-
-	mShipNumbers[0] = 2;
-
+	mShipNumbers = mInitShipNumbers;
 	if (mListener)
 		mListener->onBattleStart();
+	onPlayerChange(mPlayer, 1 - mPlayer);
 }
 
 void GameControl::onBattleEnd(int winnerPlayer)

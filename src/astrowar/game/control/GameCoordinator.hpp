@@ -9,6 +9,8 @@
 #define GAMECOORDINATOR_HPP_
 
 #include "../grid/Grid3D.hpp"
+// STD
+#include <queue>
 // OIS
 #include <OIS/OIS.h>
 // CEGUI
@@ -24,7 +26,7 @@ public:
 	virtual ~GameCoordinatorListener();
 };
 
-class GameCoordinator: public Grid3DListener, public OIS::KeyListener, public GameControlListener
+class GameCoordinator: public Grid3DListener, public OIS::KeyListener, public GameControlListener, public Ogre::FrameListener
 {
 public:
 	GameCoordinator();
@@ -51,6 +53,8 @@ public:
 	// Listener
 	GameCoordinatorListener* getListener() const;
 	void setListener(GameCoordinatorListener* listener);
+	// Frame Listener
+	virtual bool frameRenderingQueued(const Ogre::FrameEvent& evt);
 private:
 	// On Game Events
 	virtual void onPlayerChange(int playerFrom, int playerTo);
@@ -72,6 +76,8 @@ private:
 	GameCoordinatorListener* mListener;
 	// Camera Node
 	Ogre::SceneNode* mCameraNode;
+	// Sor
+	std::queue<GameControlProvider::FireResult> mFireResults;
 };
 
 #endif /* GAMECOORDINATOR_HPP_ */

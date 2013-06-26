@@ -190,6 +190,17 @@ void GameCoordinator::setListener(GameCoordinatorListener* listener)
 	mListener = listener;
 }
 
+// Frame Listener
+bool GameCoordinator::frameRenderingQueued(const Ogre::FrameEvent& evt)
+{
+	while (!mFireResults.empty())
+	{
+		processFireResult(mFireResults.front());
+		mFireResults.pop();
+	}
+	return true;
+}
+
 void GameCoordinator::fireEventOnActiveGrid()
 {
 	if (mControlProvider->getGamePhase() == GameControlProvider::GP_SET)
@@ -207,6 +218,8 @@ void GameCoordinator::processFireResult(GameControlProvider::FireResult fireResu
 {
 	if (!fireResult.isValid)
 		return;
+	cout << "Lövés a(z) " << (fireResult.playerOfGrid == 0 ? "saját" : "ellenséges") << " rácsra [" << fireResult.coords[0] << ";" << fireResult.coords[1]
+			<< ";" << fireResult.coords[2] << "]" << endl;
 	// Marker
 	if (fireResult.isDamaged)
 		mGrids[fireResult.playerOfGrid]->setMarkerAt(Grid3D::MT_RED, fireResult.coords);
@@ -305,5 +318,5 @@ void GameCoordinator::onBattleEnd(int winnerPlayer)
 
 void GameCoordinator::onShot(GameControlProvider::FireResult fireResult)
 {
-	processFireResult(fireResult);
+	mFireResults.push(fireResult);
 }
