@@ -62,7 +62,7 @@ bool GameControl::isSetReady()
 	if (sum != 0)
 		return false;
 	for (auto& ship : mShips)
-		if (!AstrOWar::GameModelSingleton.isValidShip(ship.iD))
+		if (isShipValid(ship.hull))
 			return false;
 	return true;
 }
