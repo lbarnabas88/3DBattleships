@@ -54,10 +54,16 @@ GameControlProvider::GamePhase GameControl::getGamePhase()
 
 bool GameControl::isSetReady()
 {
+	// All ship set
 	size_t sum = 0;
 	for (auto num : mShipNumbers)
 		sum += num;
-	return sum == 0;
+	if (sum != 0)
+		return false;
+	for (auto& ship : mShips)
+		if (!AstrOWar::GameModelSingleton.isValidShip(ship.iD))
+			return false;
+	return true;
 }
 
 int GameControl::getActivePlayer()
@@ -88,7 +94,7 @@ ShipHull* GameControl::createShip(Grid3D* grid, std::vector<size_t> coords, std:
 		mShipNumbers[ship_index]--;
 	// Get which type need to be made
 	auto ship = mShipyard.createShip(type == "" ? mShipyard.getNameOfShipType(ship_index) : type, grid);
-	if (ship)
+	if (ship && getGamePhase() == GP_SET)
 	{
 		moveShipTo(ship, coords);
 		onShipCreated();
@@ -278,6 +284,7 @@ void GameControl::onFireEvent(int x, int y, int z, bool damaged, bool sunken)
 	if (result.isSink)
 	{
 		// TODO ship details from network
+		result.isSink = false;
 	}
 	// Call listener
 	onShot(result);
@@ -300,9 +307,10 @@ void GameControl::onHitEvent(int x, int y, int z, bool damaged, bool sunken)
 	{
 		int shipId = AstrOWar::GameModelSingleton.getShipWithPosition(x, y, z);
 		if (shipId >= 0)
-		{
-			// TODO get ShipHull
-		}
+			result.sunkenShip = getShipForId(shipId);
+		else
+			result.sunkenShip = NULL;
+		result.isSink = result.sunkenShip != NULL;
 	}
 	// Call listener
 	onShot(result);
@@ -326,7 +334,6 @@ void GameControl::onExitEvent()
  */
 void GameControl::onErrorEvent(int error)
 {
-	echo(utils::t2str(error));
 }
 
 /*
@@ -343,7 +350,10 @@ void GameControl::onNetworkEvent(bool success)
 // Check if ship is on a valid position
 bool GameControl::isShipValid(ShipHull* ship)
 {
-	return true;
+	auto id = getIdForShip(ship);
+	if (id < 0)
+		return false;
+	return AstrOWar::GameModelSingleton.isValidShip(id);
 }
 
 // Color shipt to correct color
