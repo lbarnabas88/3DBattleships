@@ -6,6 +6,7 @@
  */
 
 #include "PhysicsModel.h"
+#include "../../../../tools/echoes.hpp"
 using namespace std;
 
 namespace AstrOWar {
@@ -64,25 +65,16 @@ int PhysicsModel::getShipWithPosition(int x, int y, int z) {
 }
 
 void PhysicsModel::addShipToFoe(Ship* s, int x, int y, int z) {
-	int code = 0, data = -1;
 	s->setPx(x);
 	s->setPy(y);
 	s->setPz(z);
-
 	foeShips.push_back(s);
 	vector<vector<int> > structure = s->getStructure();
 	for (unsigned int i = 0; i < structure.size(); i++) {
 		for (unsigned int j = 0; j < structure[i].size(); j++) {
 			for (int k = 0; k < structure[i][j]; k++) {
-				if ((x + i >= cubeFoe.size())
-						|| (y + k >= cubeFoe[x + i].size())
-						|| (z + j >= cubeFoe[x + i][y + k].size())
-						|| (x + i < 0) || (y + k < 0) || (z + j < 0)) {
-					code = -1;		// ha kilóg a pályáról
-				} else {
-					cubeFoe[x + i][y + k][z + j]->setShip(s);
-					s->addField(cubeFoe[x + i][y + k][z + j]);
-				}
+				cubeFoe[x + i][y + k][z + j]->setShip(s);
+				s->addField(cubeFoe[x + i][y + k][z + j]);
 			}
 		}
 	}
@@ -105,7 +97,7 @@ Ship* PhysicsModel::getShipObjectWithPosition(int x, int y, int z) {
  */
 Pair<int> PhysicsModel::addShip(Ship *s, int x, int y, int z) {
 	int code = 0;
-	cout << x << " " << y << " " << z << endl;
+	echo(utils::t2str(x) + " " + utils::t2str(y) + " " + utils::t2str(z));
 	s->setPx(x);
 	s->setPy(y);
 	s->setPz(z);
@@ -153,7 +145,7 @@ Pair<int> PhysicsModel::editShip(Ship* s, int x, int y, int z) {
 			}
 		}
 	}
-	return Pair<int>(0, s->getId());	// ok
+	return Pair<int>(code, s->getId());	// ok
 }
 
 bool PhysicsModel::isValidShip(Ship* s) {
@@ -202,6 +194,10 @@ bool PhysicsModel::idead() {
 	return myShips.size() == 0;
 }
 
+std::vector<Ship*> PhysicsModel::getShips() {
+	return myShips;
+}
+
 bool PhysicsModel::check() {
 	for (int i = myShips.size() - 1; i >= 0; i--) {
 		if (myShips[i]->isDead()) {
@@ -230,39 +226,40 @@ void PhysicsModel::toString() {
 }
 
 void PhysicsModel::dump() {
+	cout << "start DUMP" << endl;
 	ofstream o("phisicsModelDump.txt");
 	o << "MyCube" << endl;
 
 	for (unsigned int i = 0; i < cubeMy.size(); i++) {
-		cout << "" << endl;
-		cout << "X: " << i << endl;
+		o << "" << endl;
+		o << "X: " << i << endl;
 		for (unsigned int j = 0; j < cubeMy[i].size(); j++) {
 			for (unsigned int k = 0; k < cubeMy[i][j].size(); k++) {
-				cout << cubeMy[i][j][k]->toString() << " " << endl;
+				o << cubeMy[i][j][k]->toString() << " ";
 			}
-			cout << endl;
+			o << endl;
 		}
 	}
-	cout
+	o
 			<< "______________________________________________________________________"
 			<< endl;
 	o << "FoeCube" << endl;
 
 	for (unsigned int i = 0; i < cubeFoe.size(); i++) {
-		cout << "" << endl;
-		cout << "X: " << i << endl;
+		o << "" << endl;
+		o << "X: " << i << endl;
 		for (unsigned int j = 0; j < cubeFoe[i].size(); j++) {
 			for (unsigned int k = 0; k < cubeFoe[i][j].size(); k++) {
-				cout << cubeFoe[i][j][k]->toString() << " " << endl;
+				o << cubeFoe[i][j][k]->toString() << " ";
 			}
-			cout << endl;
+			o << endl;
 		}
 	}
-	cout
+	o
 			<< "______________________________________________________________________"
 			<< endl;
 	for (Ship* s : myShips) {
-		s->toString();
+		o << s->getId() << endl;
 	}
 
 	o.close();

@@ -6,11 +6,12 @@
  */
 
 #include "GameModel.h"
+#include "../../../../tools/echoes.hpp"
 
 namespace AstrOWar {
 
 int GameModel::idCounter = 0;
-int GameModel::shipIdCounter = 0;
+int GameModel::shipIdCounter = 1;
 
 GameModel::GameModel() {
 	youtNext = false;
@@ -21,6 +22,9 @@ GameModel::GameModel() {
 
 GameModel::~GameModel() {
 }
+int GameModel::getId() {
+	return GameModel::idCounter + 1;
+}
 
 void GameModel::init() {
 	JSON::JSONSingleton.parse("config/astrowar.json", &kollekcio);
@@ -29,19 +33,6 @@ void GameModel::init() {
 
 void GameModel::setListener(GameModelListener *g) {
 	gml = g;
-}
-
-/*
- *  n = 10
- *	add Fighter, Destroyer, Battleship, Carrier to physicsModel
- */
-void GameModel::createTeszt() {
-	pModel->init(10);
-	addShipToModel("Fighter", 0, 3, 0);
-	addShipToModel("Destroyer", 1, 6, 0);
-	addShipToModel("Battleship", 2, 0, 0);
-	addShipToModel("Carrier", 3, 0, 0);
-	pModel->toString();
 }
 
 void GameModel::setSocket(sf::TcpSocket *mSocket, bool _iss) {
@@ -66,6 +57,7 @@ Pair<int> GameModel::addShipToModel(std::string type, int x, int y, int z) {
 }
 
 bool GameModel::isValidShip(int id) {
+	pModel->dump();
 	Ship* hajo = nullptr;
 	for (Ship* s : pModel->getShips()) {
 		if (s->getId() == id)
@@ -73,7 +65,6 @@ bool GameModel::isValidShip(int id) {
 	}
 	if (hajo == nullptr)
 		return false;
-	pModel->dump();
 	return pModel->isValidShip(hajo);
 }
 
@@ -153,13 +144,13 @@ void GameModel::messageEventHandlerBAD(Message &m) {
 void GameModel::messageEventHandlerFIRE(Message &m) {
 	//INFO	ő volt e soron
 	if (!isYourNext()) {
-		cout<<"fire init"<<endl;
+		cout << "fire init" << endl;
 		//INFO valid e az utasítás
 		if (m.validate(pModel->getDimension())) {
-			cout<<"fire validate"<<endl;
+			cout << "fire validate" << endl;
 			//INFO utasítás végrehajtása
 			if (pModel->fire(m)) {
-				cout<<"fire fire"<<endl;
+				cout << "fire fire" << endl;
 				//INFO eredmény alapján FIREOK
 				if (pModel->checkShip(m)) {
 					Ship* s = pModel->getShipObjectWithPosition(m.getPosX(),
@@ -218,8 +209,8 @@ void GameModel::messageEventHandlerFIREOK(Message &m) {
 			pModel->fire(m);
 			youtNext = false;
 			if (gml != nullptr) {
-				gml->onFireEvent(oldM.getPosX(), oldM.getPosY(), oldM.getPosZ(), true,
-						false, nullptr);
+				gml->onFireEvent(oldM.getPosX(), oldM.getPosY(), oldM.getPosZ(),
+						true, false, nullptr);
 			}
 		}
 	}
@@ -240,8 +231,8 @@ void GameModel::messageEventHandlerFIRESUCESS(Message &m) {
 			if (t != nullptr)
 				pModel->addShipToFoe(t, m.getPosX(), m.getPosY(), m.getPosZ());
 			if (gml != nullptr) {
-				gml->onFireEvent(oldM.getPosX(), oldM.getPosY(), oldM.getPosZ(), true,
-						true, t);
+				gml->onFireEvent(oldM.getPosX(), oldM.getPosY(), oldM.getPosZ(),
+						true, true, t);
 			}
 		}
 	}
@@ -256,8 +247,8 @@ void GameModel::messageEventHandlerFIREBAD(Message &m) {
 			pModel->fire(m);
 			youtNext = false;
 			if (gml != nullptr) {
-				gml->onFireEvent(oldM.getPosX(), oldM.getPosY(), oldM.getPosZ(), false,
-						false, nullptr);
+				gml->onFireEvent(oldM.getPosX(), oldM.getPosY(), oldM.getPosZ(),
+						false, false, nullptr);
 			}
 		}
 	}
@@ -270,39 +261,39 @@ void GameModel::messageEventHandler(std::string encodedString) {
 	if (m.validate()) {
 		switch (m.getMsgType()) {
 		case HELLO:
-			cout<<"HELLO"<<endl;
+			cout << "HELLO" << endl;
 			messageEventHandlerHELLO(m);
 			break;
 		case OK:
-			cout<<"OK"<<endl;
+			cout << "OK" << endl;
 			messageEventHandlerOK(m);
 			break;
 		case BAD:
-			cout<<"BAD"<<endl;
+			cout << "BAD" << endl;
 			messageEventHandlerBAD(m);
 			break;
 		case FIRE:
-			cout<<"FIRE"<<endl;
+			cout << "FIRE" << endl;
 			messageEventHandlerFIRE(m);
 			break;
 		case IMDIED:
-			cout<<"IMDIED"<<endl;
+			cout << "IMDIED" << endl;
 			messageEventHandlerIMDIED(m);
 			break;
 		case FIREOK:
-			cout<<"FIREOK"<<endl;
+			cout << "FIREOK" << endl;
 			messageEventHandlerFIREOK(m);
 			break;
 		case FIREBAD:
-			cout<<"FIREBAD"<<endl;
+			cout << "FIREBAD" << endl;
 			messageEventHandlerFIREBAD(m);
 			break;
 		case FIRESUCESS:
-			cout<<"FIRESUCESS"<<endl;
+			cout << "FIRESUCESS" << endl;
 			messageEventHandlerFIRESUCESS(m);
 			break;
 		case EXIT:
-			cout<<"EXIT"<<endl;
+			cout << "EXIT" << endl;
 			messageEventHandlerEXIT(m);
 			break;
 		}
@@ -326,6 +317,7 @@ void GameModel::fire(int x, int y, int z) {
  * kilépés kezdeményezése
  */
 void GameModel::exit() {
+	pModel->dump();
 	sendMessageOnNetwork(Message().init(EXIT, GameModel::getId(), 0));
 }
 

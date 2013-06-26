@@ -21,8 +21,6 @@ using namespace std;
 
 namespace AstrOWar {
 
-// csak egy mintaosztály, nem létezik
-
 class GameModel {
 private:
 	bool youtNext;
@@ -33,10 +31,9 @@ private:
 	NetworkModel *nModel;									// hálózati model
 
 	static int idCounter;
-	static int getId() {
-		return GameModel::idCounter + 1;
-	}
 	static int shipIdCounter;
+	static int getId();
+
 protected:
 	GameModel();
 	virtual ~GameModel();
@@ -53,40 +50,32 @@ protected:
 	void messageEventHandlerFIRESUCESS(Message &m);
 
 	void sendMessageOnNetwork(Message msg);
-
 	void _fire(Message &m);
 
 public:
-
 	static GameModel& getSingleton();
-	void init();
-	void createTeszt();
 
-	void setSocket(sf::TcpSocket *mSocket, bool _iss);
-
-	bool isYourNext();
-	void fire(int x, int y, int z);
 	Pair<int> addShipToModel(int type, int x, int y, int z);
 	Pair<int> addShipToModel(std::string type, int x, int y, int z);
 	Pair<int> editShip(int id, int x, int y, int z);
-	int deleteShip(int id);
 
+	int deleteShip(int id);
 	int getShipWithPosition(int x, int y, int z);
 
+	void init();
+	void start();
 	void exit();
 	void reset(int i);
-	bool isEnableConnection();
-	void start();
-
-	vector<Ship> getCollection();
+	void fire(int x, int y, int z);
 	void setListener(GameModelListener *g);
+	void setSocket(sf::TcpSocket *mSocket, bool _iss);
 
+	bool isEnableConnection();
+	bool isYourNext();
 	bool isValidShip(int id);
 
+	vector<Ship> getCollection();
 };
-
-
-
 extern GameModel& GameModelSingleton;
 
 } /* namespace AstrOWar */

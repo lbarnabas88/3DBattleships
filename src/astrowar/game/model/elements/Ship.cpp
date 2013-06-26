@@ -10,7 +10,7 @@
 namespace AstrOWar {
 
 Ship::Ship() {
-	x = y = z = id = 0;
+	x = y = z = id = max = px = py = pz = 0;
 	type = 0;
 }
 
