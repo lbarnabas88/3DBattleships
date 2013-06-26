@@ -65,7 +65,8 @@ Ogre::String AstrOWarInitHelper::getWindowTitle()
 unsigned AstrOWarInitHelper::getWindowHnd()
 {
 	unsigned windowHnd = 0;
-	OgreFrameworkSingleton.getRenderWindow()->getCustomAttribute("WINDOW", &windowHnd);
+	Ogre::String* window_str = new Ogre::String("WINDOW");
+	OgreFrameworkSingleton.getRenderWindow()->getCustomAttribute(*window_str, &windowHnd);
 	return windowHnd;
 }
 
