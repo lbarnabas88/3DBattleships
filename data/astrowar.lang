@@ -33,3 +33,4 @@ game.ships.name.battle	Fleet	Flotta
 game.ships.quantity	q	db
 game.won	You WIN	Gratulálok! Nyertél!
 game.lost	You LOST	Sajnos vesztettél!
+game.quit	Enemy's missing o.O	Az ellenség eltűnt. o.O

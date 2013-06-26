@@ -59,7 +59,7 @@ private:
 	virtual void onShipCreated();
 	virtual void onBattleStart();
 	virtual void onBattleEnd(int winnerPlayer);
-	virtual void onEnemyShot(GameControlProvider::FireResult fireResult);
+	virtual void onShot(GameControlProvider::FireResult fireResult);
 	// Grids
 	Grid3D* mGrids[2];
 	void fireEventOnActiveGrid();

@@ -42,7 +42,7 @@ public:
 		} ship; // Only valid if isSink true
 		ShipHull* sunkenShip;
 	};
-	virtual FireResult fireTorpedo(std::vector<size_t> coords) = 0;
+	virtual void fireTorpedo(std::vector<size_t> coords) = 0;
 	// Ship management
 	virtual ShipHull* createShip(Grid3D* grid, std::vector<size_t> coords, std::string type = "") = 0;
 	virtual ShipHull* getShipForNode(Ogre::SceneNode* sceneNode) = 0;

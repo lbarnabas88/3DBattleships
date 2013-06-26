@@ -40,7 +40,6 @@ GameControl::GameControl(Ogre::SceneManager* sceneManager) :
 
 	mListSelections[0] = 0;
 	mListSelections[1] = 0;
-	// TODO load from game
 }
 
 GameControl::~GameControl()
@@ -58,7 +57,6 @@ bool GameControl::isSetReady()
 	size_t sum = 0;
 	for (auto num : mShipNumbers)
 		sum += num;
-	// TODO from game
 	return sum == 0;
 }
 
@@ -73,33 +71,10 @@ void GameControl::setDone()
 	onBattleStart();
 }
 
-GameControl::FireResult GameControl::fireTorpedo(std::vector<size_t> coords)
+void GameControl::fireTorpedo(std::vector<size_t> coords)
 {
-	FireResult result;
-	// Fire
-	// Set
-	result.isValid = true;
-	if (!result.isValid)
-		return result;
-	// If valid fill other informations
-	// TODO én lövök + eredmény
-	result.playerOfGrid = 1 - mPlayer;
-	result.coords = coords;
-	result.isDamaged = rand() % 2;
-	// Teszt sink
-	result.isSink = true;
-	result.ship.coords = coords;
-	result.ship.orientation = 15;
-	result.ship.type = "Battleship";
-	if (mPlayer == 0)
-		result.sunkenShip = NULL;
-	else
-		result.sunkenShip = mShipyard.getShip(size_t(0));
-	// Player change
-	mListener->onPlayerChange(mPlayer, 1 - mPlayer);
-	mPlayer = 1 - mPlayer;
-	// Return results
-	return result;
+	// FIRE
+	AstrOWar::GameModelSingleton.fire(coords[0], coords[1], coords[2]);
 }
 
 ShipHull* GameControl::createShip(Grid3D* grid, std::vector<size_t> coords, std::string type)
@@ -117,6 +92,17 @@ ShipHull* GameControl::createShip(Grid3D* grid, std::vector<size_t> coords, std:
 	{
 		moveShipTo(ship, coords);
 		onShipCreated();
+		// Model
+		auto result = AstrOWar::GameModelSingleton.addShipToModel(type, coords[0], coords[1], coords[2]);
+		if (result.errorCode == 0)
+		{
+			addShip(result.resume, ship);
+		}
+		else
+		{
+			mShipyard.destroyShip(ship);
+			ship = NULL;
+		}
 	}
 	return ship;
 }
@@ -280,12 +266,46 @@ void GameControl::setListener(GameControlListener* listener)
  */
 void GameControl::onFireEvent(int x, int y, int z, bool damaged, bool sunken)
 {
+	// Set player
+	setPlayer(1);
+	// Set result
+	FireResult result;
+	result.isValid = true;
+	result.playerOfGrid = 1;
+	result.coords = std::vector<size_t>( { (size_t) x, (size_t) y, (size_t) z });
+	result.isDamaged = damaged;
+	result.isSink = sunken;
+	if (result.isSink)
+	{
+		// TODO ship details from network
+	}
+	// Call listener
+	onShot(result);
 }
 /*
  * találat esetén: x,y,z koordináták, és true ha sikeres, false ha nem
  */
 void GameControl::onHitEvent(int x, int y, int z, bool damaged, bool sunken)
 {
+	// Set player
+	setPlayer(0);
+	// Set result
+	FireResult result;
+	result.isValid = true;
+	result.playerOfGrid = 0;
+	result.coords = std::vector<size_t>( { (size_t) x, (size_t) y, (size_t) z });
+	result.isDamaged = damaged;
+	result.isSink = sunken;
+	if (result.isSink)
+	{
+		int shipId = AstrOWar::GameModelSingleton.getShipWithPosition(x, y, z);
+		if (shipId >= 0)
+		{
+			// TODO get ShipHull
+		}
+	}
+	// Call listener
+	onShot(result);
 }
 /*
  * játékos halála esetén, true ha én, false ha az ellenfél
@@ -307,6 +327,17 @@ void GameControl::onExitEvent()
 void GameControl::onErrorEvent(int error)
 {
 	echo(utils::t2str(error));
+}
+
+/*
+ * a hálózat állapotát adja meg
+ */
+void GameControl::onNetworkEvent(bool success)
+{
+	if (AstrOWar::GameModelSingleton.isYourNext())
+		setPlayer(0);
+	else
+		setPlayer(1);
 }
 
 // Check if ship is on a valid position
@@ -403,8 +434,35 @@ void GameControl::onBattleEnd(int winnerPlayer)
 		mListener->onBattleEnd(winnerPlayer);
 }
 
-void GameControl::onEnemyShot(FireResult fireResult)
+void GameControl::onShot(FireResult fireResult)
 {
 	if (mListener)
-		mListener->onEnemyShot(fireResult);
+		mListener->onShot(fireResult);
+}
+
+void GameControl::setPlayer(int player)
+{
+	mPlayer = player;
+	onPlayerChange(1 - mPlayer, mPlayer);
+}
+
+ShipHull* GameControl::getShipForId(int id)
+{
+	for (auto& ship : mShips)
+		if (ship.iD == id)
+			return ship.hull;
+	return NULL;
+}
+
+int GameControl::getIdForShip(ShipHull* hull)
+{
+	for (auto& ship : mShips)
+		if (ship.hull == hull)
+			return ship.iD;
+	return -1;
+}
+
+void GameControl::addShip(int id, ShipHull* hull)
+{
+	mShips.push_back( { id, hull });
 }
