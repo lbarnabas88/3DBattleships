@@ -158,10 +158,12 @@ void GameModel::messageEventHandlerFIRE(Message &m) {
 			if (pModel->fire(m)) {
 				//INFO eredmény alapján FIREOK
 				if (pModel->checkShip(m)) {
-					Ship* s = pModel->getShipObjectWithPosition(m.getPosX(), m.getPosY(),	m.getPosZ());
+					Ship* s = pModel->getShipObjectWithPosition(m.getPosX(),
+							m.getPosY(), m.getPosZ());
 					sendMessageOnNetwork(
 							Message().init(FIRESUCESS, s->getPx(), s->getPy(),
-									s->getPz(), GameModel::getId(), m.getId()));
+									s->getPz(), GameModel::getId(), m.getId(),
+									s->getType()));
 					if (gml != nullptr)	// sucess
 						gml->onHitEvent(m.getPosX(), m.getPosY(), m.getPosZ(),
 								true, true);
@@ -213,7 +215,7 @@ void GameModel::messageEventHandlerFIREOK(Message &m) {
 			youtNext = false;
 			if (gml != nullptr) {
 				gml->onFireEvent(m.getPosX(), m.getPosY(), m.getPosZ(), true,
-						false);
+						false, nullptr);
 			}
 		}
 	}
@@ -226,9 +228,16 @@ void GameModel::messageEventHandlerFIRESUCESS(Message &m) {
 		if (oldM.getMsgType() == FIRE) {
 			pModel->fire(m);
 			youtNext = false;
+			Ship *t = nullptr;
+			for (Ship s : kollekcio) {
+				if (s.getType() == m.getType())
+					t = &s;
+			}
+			if (t != nullptr)
+				pModel->addShipToFoe(t, m.getPosX(), m.getPosY(), m.getPosZ());
 			if (gml != nullptr) {
 				gml->onFireEvent(m.getPosX(), m.getPosY(), m.getPosZ(), true,
-						true);
+						true, t);
 			}
 		}
 	}
@@ -244,7 +253,7 @@ void GameModel::messageEventHandlerFIREBAD(Message &m) {
 			youtNext = false;
 			if (gml != nullptr) {
 				gml->onFireEvent(m.getPosX(), m.getPosY(), m.getPosZ(), false,
-						false);
+						false, nullptr);
 			}
 		}
 	}

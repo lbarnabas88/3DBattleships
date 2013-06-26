@@ -34,10 +34,33 @@ Message Message::init(int _msgType, int _id, int _refId) {
 	return (*this);
 }
 
+Message Message::init(int _msgType, int _posX, int _posY, int _posZ, int _id,
+		int _refId, int _type) {
+	msgType = _msgType;
+	posX = _posX;
+	posY = _posY;
+	posZ = _posZ;
+	id = _id;
+	refId = _refId;
+	type = _type;
+	return (*this);
+
+}
+Message Message::init(int _msgType, int _id, int _refId, int _type) {
+	msgType = _msgType;
+	id = _id;
+	refId = _refId;
+	type = _type;
+	return (*this);
+}
+
 int Message::getMsgType() {
 	return msgType;
 }
 
+int Message::getType() {
+	return type;
+}
 int Message::getPosX() {
 	return posX;
 }
@@ -62,8 +85,7 @@ bool Message::validate() {
 	return msgType != 0;
 }
 bool Message::validate(int n) {
-	if (posX >= 0 && posX < n && posY >= 0 && posY < n && posZ >= 0
-			&& posZ < n)
+	if (posX >= 0 && posX < n && posY >= 0 && posY < n && posZ >= 0 && posZ < n)
 		return true;
 	return false;
 }

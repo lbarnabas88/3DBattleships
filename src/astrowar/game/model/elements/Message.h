@@ -51,9 +51,12 @@ public:
 	Message();
 	virtual ~Message();
 	Message init(int _msgType, int _posX, int _posY, int _posZ, int _id, int _refId);
+	Message init(int _msgType, int _posX, int _posY, int _posZ, int _id, int _refId, int _type);
+	Message init(int _msgType, int _id, int _refId, int _type);
 	Message init(int _msgType, int _id, int _refId);
 
 	int getMsgType();
+	int getType();
 	int getPosX();
 	int getPosY();
 	int getPosZ();

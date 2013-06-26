@@ -8,6 +8,8 @@
 #ifndef GAMEMODELLISTENER_H_
 #define GAMEMODELLISTENER_H_
 
+#include "../elements/Ship.h"
+
 namespace AstrOWar {
 
 class GameModelListener {
@@ -17,7 +19,7 @@ public:
 	/*
 	 * lövés esetén x,y,z koordináták, true ha sikeres, false ha nem
 	 */
-	virtual void onFireEvent(int, int, int, bool, bool)=0;
+	virtual void onFireEvent(int, int, int, bool, bool, Ship*)=0;
 	/*
 	 * találat esetén: x,y,z koordináták, és true ha sikeres, false ha nem
 	 */

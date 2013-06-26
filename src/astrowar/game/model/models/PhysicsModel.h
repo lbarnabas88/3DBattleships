@@ -24,6 +24,7 @@ protected:
 	std::vector<std::vector<std::vector<Field*> > > cubeMy;
 	std::vector<std::vector<std::vector<Field*> > > cubeFoe;
 	std::vector<Ship*> myShips;
+	std::vector<Ship*> foeShips;
 	std::vector<Ship*> myShipsAll;
 	GameModel* gm;
 	void destroy();
@@ -44,6 +45,7 @@ public:
 	int getShipWithPosition(int x, int y, int z);
 	Ship* getShipObjectWithPosition(int x, int y, int z);
 	bool isValidShip(Ship* s);
+	void addShipToFoe(Ship* s, int _x, int _y, int _z);
 };
 
 } /* namespace AstrOWar */

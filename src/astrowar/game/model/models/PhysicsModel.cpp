@@ -63,6 +63,31 @@ int PhysicsModel::getShipWithPosition(int x, int y, int z) {
 	return -1;
 }
 
+void PhysicsModel::addShipToFoe(Ship* s, int x, int y, int z) {
+	int code = 0, data = -1;
+	s->setPx(x);
+	s->setPy(y);
+	s->setPz(z);
+
+	foeShips.push_back(s);
+	vector<vector<int> > structure = s->getStructure();
+	for (unsigned int i = 0; i < structure.size(); i++) {
+		for (unsigned int j = 0; j < structure[i].size(); j++) {
+			for (int k = 0; k < structure[i][j]; k++) {
+				if ((x + i >= cubeFoe.size())
+						|| (y + k >= cubeFoe[x + i].size())
+						|| (z + j >= cubeFoe[x + i][y + k].size())
+						|| (x + i < 0) || (y + k < 0) || (z + j < 0)) {
+					code = -1;		// ha kilóg a pályáról
+				} else {
+					cubeFoe[x + i][y + k][z + j]->setShip(s);
+					s->addField(cubeFoe[x + i][y + k][z + j]);
+				}
+			}
+		}
+	}
+}
+
 Ship* PhysicsModel::getShipObjectWithPosition(int x, int y, int z) {
 	return cubeMy[x][y][z]->getHajo();
 }

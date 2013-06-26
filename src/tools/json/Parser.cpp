@@ -121,11 +121,12 @@ AstrOWar::Message Parser::decode(std::string json) {
 
 	json_t* Root = json_loads(json.c_str(), 0, &error);
 	if (Root) {
-		json_t *msgType, *x, *y, *z, *pos, *id, *refId;
+		json_t *msgType, *x, *y, *z, *pos, *id, *refId, *type;
 		id = json_object_get(Root, "id");
 		refId = json_object_get(Root, "refId");
 		msgType = json_object_get(Root, "msgType");
 		pos = json_object_get(Root, "pos");
+		type = json_object_get(Root, "type");
 		x = json_array_get(pos, 0);
 		y = json_array_get(pos, 1);
 		z = json_array_get(pos, 2);
@@ -133,7 +134,7 @@ AstrOWar::Message Parser::decode(std::string json) {
 		if (json_is_integer(msgType) && json_is_array(pos)
 				&& json_is_integer(id) && json_is_integer(refId)
 				&& json_is_integer(x) && json_is_integer(y)
-				&& json_is_integer(z)) {
+				&& json_is_integer(z) && json_is_integer(type)) {
 
 			int _id = json_integer_value(id);
 			int _refId = json_integer_value(refId);
@@ -141,8 +142,9 @@ AstrOWar::Message Parser::decode(std::string json) {
 			int _x = json_integer_value(x);
 			int _y = json_integer_value(y);
 			int _z = json_integer_value(z);
+			int _type = json_integer_value(type);
 
-			msg.init(_msgType, _x, _y, _z, _id, _refId);
+			msg.init(_msgType, _x, _y, _z, _id, _refId, _type);
 		}
 	}
 	return msg;
@@ -162,6 +164,7 @@ std::string Parser::encode(AstrOWar::Message msg) {
 	json_object_set_new(Root, "refId", json_integer(msg.getRefId()));
 	json_object_set_new(Root, "msgType", json_integer(msg.getMsgType()));
 	json_object_set_new(Root, "pos", pos);
+	json_object_set_new(Root, "type", json_integer(msg.getType()));
 
 	return std::string(json_dumps(Root, 0));
 }
