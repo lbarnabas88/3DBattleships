@@ -40,6 +40,7 @@ public:
 	bool check();
 	bool checkShip(Message &m);
 	std::vector<Ship*> getShips(){return myShips;}
+	int getShipWithPosition(int x, int y, int z);
 };
 
 } /* namespace AstrOWar */

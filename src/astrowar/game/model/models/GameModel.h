@@ -71,6 +71,9 @@ public:
 	Pair<int> addShipToModel(std::string type, int x, int y, int z);
 	Pair<int> editShip(int id, int x, int y, int z);
 	int deleteShip(int id);
+
+	int getShipWithPosition(int x, int y, int z);
+
 	void exit();
 	void reset(int i);
 	bool isEnableConnection();

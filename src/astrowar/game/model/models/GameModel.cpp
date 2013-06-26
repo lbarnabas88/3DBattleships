@@ -27,7 +27,7 @@ void GameModel::init() {
 	nModel->registerMessageEventHandler(&GameModel::messageEventHandler);
 }
 
-void GameModel::setListener(GameModelListener *g){
+void GameModel::setListener(GameModelListener *g) {
 	gml = g;
 }
 
@@ -44,12 +44,12 @@ void GameModel::createTeszt() {
 	pModel->toString();
 }
 
-void GameModel::setSocket(sf::TcpSocket *mSocket, bool _iss){
+void GameModel::setSocket(sf::TcpSocket *mSocket, bool _iss) {
 	nModel->setSocket(mSocket, _iss);
 	youtNext = _iss;
 }
 
-Pair<int> GameModel::addShipToModel(int type, int x, int y, int z){
+Pair<int> GameModel::addShipToModel(int type, int x, int y, int z) {
 	for (Ship s : kollekcio) {
 		if (s.getType() == type)
 			return pModel->addShip(s.clone(GameModel::shipIdCounter++), x, y, z);
@@ -65,24 +65,32 @@ Pair<int> GameModel::addShipToModel(std::string type, int x, int y, int z) {
 	return Pair<int>(3, -1);
 }
 
-Pair<int> GameModel::editShip(int id, int x, int y, int z){
+Pair<int> GameModel::editShip(int id, int x, int y, int z) {
 	Ship* hajo = nullptr;
-	for(Ship* s : pModel->getShips()){
-		if(s->getId() == id) hajo = s;
+	for (Ship* s : pModel->getShips()) {
+		if (s->getId() == id)
+			hajo = s;
 	}
-	if(hajo == nullptr) return Pair<int>(3, -1);
+	if (hajo == nullptr)
+		return Pair<int>(3, -1);
 	return pModel->editShip(hajo, x, y, z);
 }
 
-int GameModel::deleteShip(int id){
+int GameModel::deleteShip(int id) {
 	Ship* hajo = nullptr;
-	for(Ship* s : pModel->getShips()){
-		if(s->getId() == id) hajo = s;
+	for (Ship* s : pModel->getShips()) {
+		if (s->getId() == id)
+			hajo = s;
 	}
-	if(hajo==nullptr) return 1;
+	if (hajo == nullptr)
+		return 1;
 	hajo->resetField();
 	delete hajo;
 	return 0;
+}
+
+int GameModel::getShipWithPosition(int x, int y, int z) {
+	return pModel->getShipWithPosition(x, y, z);
 }
 
 void GameModel::sendMessageOnNetwork(Message msg) {
@@ -96,10 +104,10 @@ void GameModel::messageEventHandlerHELLO(Message &m) {
 	if (!nModel->isServer()) {
 		sendMessageOnNetwork(
 				Message().init(HELLO, GameModel::getId(), m.getId()));
-		if (gml != nullptr) gml->onNetworkEvent(true);
-	}
-	else sendMessageOnNetwork(
-			Message().init(OK, GameModel::getId(), m.getId()));
+		if (gml != nullptr)
+			gml->onNetworkEvent(true);
+	} else
+		sendMessageOnNetwork(Message().init(OK, GameModel::getId(), m.getId()));
 }
 void GameModel::messageEventHandlerEXIT(Message &m) {
 	//INFO ellenfél kilépett
@@ -115,9 +123,9 @@ void GameModel::messageEventHandlerOK(Message &m) {
 			//INFO utasítások lekezelése
 			if (gml != nullptr)
 				gml->onDeadEvent(true);
-		}
-		else if(oldM.getMsgType() == HELLO){
-			if (gml != nullptr) gml->onNetworkEvent(true);
+		} else if (oldM.getMsgType() == HELLO) {
+			if (gml != nullptr)
+				gml->onNetworkEvent(true);
 		}
 	}
 }
@@ -287,9 +295,11 @@ void GameModel::reset(int i) {
 	pModel->init(i);
 }
 
-bool GameModel::isEnableConnection(){return nModel->isEnableConnection();}
+bool GameModel::isEnableConnection() {
+	return nModel->isEnableConnection();
+}
 
-vector<Ship> GameModel::getCollection(){
+vector<Ship> GameModel::getCollection() {
 	return kollekcio;
 }
 

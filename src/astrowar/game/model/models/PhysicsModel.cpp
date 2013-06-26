@@ -57,6 +57,13 @@ void PhysicsModel::destroy() {
 	}
 }
 
+int PhysicsModel::getShipWithPosition(int x, int y, int z){
+	if(cubeMy[x][y][z]->getHajo()==nullptr)
+		return cubeMy[x][y][z]->getHajo()->getId();
+	return -1;
+}
+
+
 /**
  * hajó hozzáadása a modelhez
  * paraméterek:
