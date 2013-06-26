@@ -14,29 +14,24 @@
 #include "../elements/Ship.h"
 #include "../elements/Pair.h"
 #include "../elements/Message.h"
-#include "../../../../tools/json/Parser.h"
+#include "../../../tools/json/Parser.h"
+#include "GameModelListener.h"
 
 using namespace std;
 
 namespace AstrOWar {
 
-class graphics;
 // csak egy mintaosztály, nem létezik
 
 class GameModel {
 private:
 	bool youtNext;
-	graphics *gr;
+	GameModelListener *gml;
 	std::vector<AstrOWar::Ship> kollekcio; // a hajók listája, mindegyikből 1 példány
 	map<int, Message> lista;					// elküldött üzeneteket tárolja
 	PhysicsModel *pModel;									// fizikai model
 	NetworkModel *nModel;									// hálózati model
 
-	void (graphics::*fireHandler)(int, int, int, bool, bool);	// lövés esetén értesítés
-	void (graphics::*hitHandler)(int, int, int, bool, bool);// találat esetén értesítés
-	void (graphics::*deadHandler)(bool);			// halál esetén értesítés
-	void (graphics::*exitHandler)();				// kilépés esetén értesítés
-	void (graphics::*errorHandler)(int);	// hiba esetén értesítés, hibakóddal
 	static int idCounter;
 	static int getId() {
 		return GameModel::idCounter + 1;
@@ -64,30 +59,8 @@ protected:
 public:
 
 	static GameModel& getSingleton();
-	void init(graphics *g);
+	void init(GameModelListener *g);
 	void createTeszt();
-
-
-	/*
-	 * lövés esetén x,y,z koordináták, true ha sikeres, false ha nem
-	 */
-	void registerFireEventHandler(void (graphics::*fire)(int, int, int, bool, bool));
-	/*
-	 * találat esetén: x,y,z koordináták, és true ha sikeres, false ha nem
-	 */
-	void registerHitEventHandler(void (graphics::*hit)(int, int, int, bool, bool));
-	/*
-	 * játékos halála esetén, true ha én, false ha az ellenfél
-	 */
-	void registerDeadEventHandler(void (graphics::*dead)(bool));
-	/*
-	 * játékos kilépése esetén
-	 */
-	void registerExitEventHandler(void (graphics::*exit)());
-	/*
-	 * hiba esetén, hibakóddal
-	 */
-	void registerErrorEventHandler(void (graphics::*error)(int));
 
 	void setSocket(sf::TcpSocket *mSocket, bool _iss);
 

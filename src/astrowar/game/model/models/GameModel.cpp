@@ -12,11 +12,9 @@ namespace AstrOWar {
 int GameModel::idCounter = 0;
 int GameModel::shipIdCounter = 0;
 
-GameModel::GameModel() :
-		fireHandler(nullptr), hitHandler(nullptr), deadHandler(nullptr), exitHandler(
-				nullptr), errorHandler(nullptr) {
+GameModel::GameModel() {
 	youtNext = false;
-	gr = nullptr;
+	gml = nullptr;
 	pModel = new PhysicsModel(this);
 	nModel = new NetworkModel(this);
 }
@@ -24,8 +22,8 @@ GameModel::GameModel() :
 GameModel::~GameModel() {
 }
 
-void GameModel::init(graphics *g) {
-	gr = g;
+void GameModel::init(GameModelListener *g) {
+	gml = g;
 	JSON::JSONSingleton.parse("config/astrowar.json", &kollekcio);
 	nModel->registerMessageEventHandler(&GameModel::messageEventHandler);
 }
@@ -99,8 +97,8 @@ void GameModel::messageEventHandlerHELLO(Message &m) {
 }
 void GameModel::messageEventHandlerEXIT(Message &m) {
 	//INFO ellenfél kilépett
-	if (exitHandler != nullptr)
-		(gr->*exitHandler)();
+	if (gml != nullptr)
+		gml->onExitEvent();
 }
 void GameModel::messageEventHandlerOK(Message &m) {
 	if (lista.count(m.getRefId()) > 0) {
@@ -109,9 +107,9 @@ void GameModel::messageEventHandlerOK(Message &m) {
 
 		if (oldM.getMsgType() == IMDIED) {
 			//INFO utasítások lekezelése
-			if (deadHandler != nullptr) {
-				(gr->*deadHandler)(true);
-			}
+			if (gml != nullptr)
+				gml->onDeadEvent(true);
+
 		}
 	}
 }
@@ -120,8 +118,8 @@ void GameModel::messageEventHandlerBAD(Message &m) {
 		Message oldM = lista[m.getRefId()];
 		lista.erase(m.getRefId());
 		//INFO utasítások elvetése
-		if (errorHandler != nullptr)
-			(gr->*errorHandler)(m.getMsgType());
+		if (gml != nullptr)
+			gml->onErrorEvent(m.getMsgType());
 	}
 }
 void GameModel::messageEventHandlerFIRE(Message &m) {
@@ -135,13 +133,13 @@ void GameModel::messageEventHandlerFIRE(Message &m) {
 				sendMessageOnNetwork(
 						Message().init(FIREOK, GameModel::getId(), m.getId()));
 				if (pModel->checkShip(m)) {
-					if (hitHandler != nullptr)	// sucess
-						(gr->*hitHandler)(m.getPosX(), m.getPosY(), m.getPosZ(),
+					if (gml != nullptr)	// sucess
+						gml->onHitEvent(m.getPosX(), m.getPosY(), m.getPosZ(),
 								true, true);
 					pModel->check();
 				} else {
-					if (hitHandler != nullptr) // csak sérülés
-						(gr->*hitHandler)(m.getPosX(), m.getPosY(), m.getPosZ(),
+					if (gml != nullptr) // csak sérülés
+						gml->onHitEvent(m.getPosX(), m.getPosY(), m.getPosZ(),
 								true, false);
 				}
 
@@ -154,8 +152,8 @@ void GameModel::messageEventHandlerFIRE(Message &m) {
 				//INFO eredmény alapján FIREBAD
 				sendMessageOnNetwork(
 						Message().init(FIREBAD, GameModel::getId(), m.getId()));
-				if (hitHandler != nullptr)
-					(gr->*hitHandler)(m.getPosX(), m.getPosY(), m.getPosZ(),
+				if (gml != nullptr)
+					gml->onHitEvent(m.getPosX(), m.getPosY(), m.getPosZ(),
 							false, false);
 			}
 			youtNext = true;
@@ -168,9 +166,9 @@ void GameModel::messageEventHandlerFIRE(Message &m) {
 void GameModel::messageEventHandlerIMDIED(Message &m) {
 	//INFO az ellenfél az összes hajóját elvesztette
 	sendMessageOnNetwork(Message().init(OK, GameModel::getId(), m.getId()));
-	if (deadHandler != nullptr) {
-		(gr->*deadHandler)(false);
-	}
+	if (gml != nullptr)
+		gml->onDeadEvent(false);
+
 }
 void GameModel::messageEventHandlerFIREOK(Message &m) {
 	//INFO találat, garfikai kijelzés
@@ -181,8 +179,8 @@ void GameModel::messageEventHandlerFIREOK(Message &m) {
 		if (oldM.getMsgType() == FIRE) {
 			pModel->fire(m);
 			youtNext = false;
-			if (fireHandler != nullptr) {
-				(gr->*fireHandler)(m.getPosX(), m.getPosY(), m.getPosZ(), true,
+			if (gml != nullptr) {
+				gml->onFireEvent(m.getPosX(), m.getPosY(), m.getPosZ(), true,
 						false);
 			}
 		}
@@ -196,8 +194,8 @@ void GameModel::messageEventHandlerFIRESUCESS(Message &m) {
 		if (oldM.getMsgType() == FIRE) {
 			pModel->fire(m);
 			youtNext = false;
-			if (fireHandler != nullptr) {
-				(gr->*fireHandler)(m.getPosX(), m.getPosY(), m.getPosZ(), true,
+			if (gml != nullptr) {
+				gml->onFireEvent(m.getPosX(), m.getPosY(), m.getPosZ(), true,
 						true);
 			}
 		}
@@ -212,8 +210,8 @@ void GameModel::messageEventHandlerFIREBAD(Message &m) {
 		if (oldM.getMsgType() == FIRE) {
 			pModel->fire(m);
 			youtNext = false;
-			if (fireHandler != nullptr) {
-				(gr->*fireHandler)(m.getPosX(), m.getPosY(), m.getPosZ(), false,
+			if (gml != nullptr) {
+				gml->onFireEvent(m.getPosX(), m.getPosY(), m.getPosZ(), false,
 						false);
 			}
 		}
@@ -259,38 +257,6 @@ void GameModel::messageEventHandler(std::string encodedString) {
 
 void GameModel::start() {
 	sendMessageOnNetwork(Message().init(HELLO, GameModel::getId(), 0));
-}
-/*
- * lövés esetén x,y,z koordináták, true ha sikeres, false ha nem
- */
-void GameModel::registerFireEventHandler(
-		void (graphics::*fire)(int, int, int, bool, bool)) {
-	fireHandler = fire;
-}
-/*
- * találat esetén: x,y,z koordináták, és true ha sikeres, false ha nem
- */
-void GameModel::registerHitEventHandler(
-		void (graphics::*hit)(int, int, int, bool, bool)) {
-	hitHandler = hit;
-}
-/*
- * játékos halála esetén, true ha én, false ha az ellenfél
- */
-void GameModel::registerDeadEventHandler(void (graphics::*dead)(bool)) {
-	deadHandler = dead;
-}
-/*
- * játékos kilépése esetén
- */
-void GameModel::registerExitEventHandler(void (graphics::*exit)()) {
-	exitHandler = exit;
-}
-/*
- * hiba esetén, hibakóddal
- */
-void GameModel::registerErrorEventHandler(void (graphics::*error)(int)) {
-	errorHandler = error;
 }
 
 bool GameModel::isYourNext() {
