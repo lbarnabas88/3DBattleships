@@ -349,10 +349,11 @@ void GameControl::onNetworkEvent(bool success)
 // Check if ship is on a valid position
 bool GameControl::isShipValid(ShipHull* ship)
 {
-	auto id = getIdForShip(ship);
-	if (id < 0)
-		return false;
-	return AstrOWar::GameModelSingleton.isValidShip(id);
+	return true;
+//	auto id = getIdForShip(ship);
+//	if (id < 0)
+//		return false;
+//	return AstrOWar::GameModelSingleton.isValidShip(id);
 }
 
 // Color shipt to correct color
