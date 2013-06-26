@@ -214,7 +214,7 @@ void GameModel::messageEventHandlerFIREOK(Message &m) {
 			pModel->fire(m);
 			youtNext = false;
 			if (gml != nullptr) {
-				gml->onFireEvent(m.getPosX(), m.getPosY(), m.getPosZ(), true,
+				gml->onFireEvent(oldM.getPosX(), oldM.getPosY(), oldM.getPosZ(), true,
 						false, nullptr);
 			}
 		}
@@ -236,7 +236,7 @@ void GameModel::messageEventHandlerFIRESUCESS(Message &m) {
 			if (t != nullptr)
 				pModel->addShipToFoe(t, m.getPosX(), m.getPosY(), m.getPosZ());
 			if (gml != nullptr) {
-				gml->onFireEvent(m.getPosX(), m.getPosY(), m.getPosZ(), true,
+				gml->onFireEvent(oldM.getPosX(), oldM.getPosY(), oldM.getPosZ(), true,
 						true, t);
 			}
 		}
@@ -252,7 +252,7 @@ void GameModel::messageEventHandlerFIREBAD(Message &m) {
 			pModel->fire(m);
 			youtNext = false;
 			if (gml != nullptr) {
-				gml->onFireEvent(m.getPosX(), m.getPosY(), m.getPosZ(), false,
+				gml->onFireEvent(oldM.getPosX(), oldM.getPosY(), oldM.getPosZ(), false,
 						false, nullptr);
 			}
 		}
