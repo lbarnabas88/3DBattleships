@@ -44,6 +44,7 @@ GameControl::GameControl(Ogre::SceneManager* sceneManager) :
 
 GameControl::~GameControl()
 {
+	AstrOWar::GameModelSingleton.exit();
 }
 
 // Control Provider
