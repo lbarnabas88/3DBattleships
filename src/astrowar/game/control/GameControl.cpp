@@ -94,20 +94,16 @@ ShipHull* GameControl::createShip(Grid3D* grid, std::vector<size_t> coords, std:
 		mShipNumbers[ship_index]--;
 	// Get which type need to be made
 	auto ship = mShipyard.createShip(type == "" ? mShipyard.getNameOfShipType(ship_index) : type, grid);
-	if (ship && getGamePhase() == GP_SET)
+	if (ship)
 	{
 		moveShipTo(ship, coords);
 		onShipCreated();
+
 		// Model
-		auto result = AstrOWar::GameModelSingleton.addShipToModel(type, coords[0], coords[1], coords[2]);
-		if (result.errorCode == 0)
+		if (getGamePhase() == GP_SET)
 		{
+			auto result = AstrOWar::GameModelSingleton.addShipToModel(type, coords[0], coords[1], coords[2]);
 			addShip(result.resume, ship);
-		}
-		else
-		{
-			mShipyard.destroyShip(ship);
-			ship = NULL;
 		}
 	}
 	return ship;
