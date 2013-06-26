@@ -230,11 +230,14 @@ void GameModel::messageEventHandlerFIRESUCESS(Message &m) {
 			}
 			if (t != nullptr)
 				pModel->addShipToFoe(t, m.getPosX(), m.getPosY(), m.getPosZ());
+			echo("suc");
 			if (gml != nullptr) {
+				echo("suc nagyon");
 				gml->onFireEvent(oldM.getPosX(), oldM.getPosY(), oldM.getPosZ(),
 						true, true, t);
 			}
 		}
+		echo("wtf?");
 	}
 }
 void GameModel::messageEventHandlerFIREBAD(Message &m) {

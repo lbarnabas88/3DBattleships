@@ -6,6 +6,8 @@
  */
 
 #include "Ship.h"
+#include "../../../../tools/echoes.hpp"
+#include "../../../../tools/utils.hpp"
 
 namespace AstrOWar {
 
@@ -112,8 +114,10 @@ bool Ship::isDead() {
 	for (Field* f : mezok)
 		if (f->IsDisruptive())
 			j++;
-
-	return ((i * _G) >= j);
+	echo("Ship::IsDead() return " + ((i * _G) >= j)?"true":"false");
+	echo("Ship::IsDead()::i is " + utils::t2str(i) );
+	echo("Ship::IsDead()::j is " + utils::t2str(j) );
+	return ((i * _G) <= j);
 }
 
 void Ship::resetField() {
