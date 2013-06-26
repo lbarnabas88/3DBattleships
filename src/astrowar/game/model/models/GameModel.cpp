@@ -96,7 +96,10 @@ void GameModel::messageEventHandlerHELLO(Message &m) {
 	if (!nModel->isServer()) {
 		sendMessageOnNetwork(
 				Message().init(HELLO, GameModel::getId(), m.getId()));
+		if (gml != nullptr) gml->onNetworkEvent(true);
 	}
+	else sendMessageOnNetwork(
+			Message().init(OK, GameModel::getId(), m.getId()));
 }
 void GameModel::messageEventHandlerEXIT(Message &m) {
 	//INFO ellenfél kilépett
@@ -112,7 +115,9 @@ void GameModel::messageEventHandlerOK(Message &m) {
 			//INFO utasítások lekezelése
 			if (gml != nullptr)
 				gml->onDeadEvent(true);
-
+		}
+		else if(oldM.getMsgType() == HELLO){
+			if (gml != nullptr) gml->onNetworkEvent(true);
 		}
 	}
 }

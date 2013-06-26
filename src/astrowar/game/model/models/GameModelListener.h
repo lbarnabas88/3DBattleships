@@ -34,7 +34,10 @@ public:
 	 * hiba esetén, hibakóddal
 	 */
 	virtual void onErrorEvent(int)=0;
-
+	/*
+	 * a hálózat állapotát adja meg
+	 */
+	virtual void onNetworkEvent(bool)=0;
 };
 
 } /* namespace AstrOWar */
