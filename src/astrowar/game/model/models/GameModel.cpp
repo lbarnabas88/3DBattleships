@@ -157,14 +157,19 @@ void GameModel::messageEventHandlerFIRE(Message &m) {
 			//INFO utasítás végrehajtása
 			if (pModel->fire(m)) {
 				//INFO eredmény alapján FIREOK
-				sendMessageOnNetwork(
-						Message().init(FIREOK, GameModel::getId(), m.getId()));
 				if (pModel->checkShip(m)) {
+					Ship* s = pModel->getShipObjectWithPosition(m.getPosX(), m.getPosY(),	m.getPosZ());
+					sendMessageOnNetwork(
+							Message().init(FIRESUCESS, s->getPx(), s->getPy(),
+									s->getPz(), GameModel::getId(), m.getId()));
 					if (gml != nullptr)	// sucess
 						gml->onHitEvent(m.getPosX(), m.getPosY(), m.getPosZ(),
 								true, true);
 					pModel->check();
 				} else {
+					sendMessageOnNetwork(
+							Message().init(FIREOK, GameModel::getId(),
+									m.getId()));
 					if (gml != nullptr) // csak sérülés
 						gml->onHitEvent(m.getPosX(), m.getPosY(), m.getPosZ(),
 								true, false);

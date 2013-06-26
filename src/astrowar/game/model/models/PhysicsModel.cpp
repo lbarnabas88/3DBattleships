@@ -63,6 +63,10 @@ int PhysicsModel::getShipWithPosition(int x, int y, int z) {
 	return -1;
 }
 
+Ship* PhysicsModel::getShipObjectWithPosition(int x, int y, int z) {
+	return cubeMy[x][y][z]->getHajo();
+}
+
 /**
  * hajó hozzáadása a modelhez
  * paraméterek:

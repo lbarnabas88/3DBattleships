@@ -42,6 +42,7 @@ public:
 	bool checkShip(Message &m);
 	std::vector<Ship*> getShips(){return myShips;}
 	int getShipWithPosition(int x, int y, int z);
+	Ship* getShipObjectWithPosition(int x, int y, int z);
 	bool isValidShip(Ship* s);
 };
 

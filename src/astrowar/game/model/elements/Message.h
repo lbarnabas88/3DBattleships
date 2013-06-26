@@ -45,6 +45,7 @@ protected:
 	int posZ;
 	int id;
 	int refId;
+	int type;
 
 public:
 	Message();

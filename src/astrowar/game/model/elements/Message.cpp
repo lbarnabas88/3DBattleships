@@ -10,7 +10,7 @@
 namespace AstrOWar {
 
 Message::Message() :
-		msgType(0), posX(0), posY(0), posZ(0), id(0), refId(0) {
+		msgType(0), posX(0), posY(0), posZ(0), id(0), refId(0), type(0) {
 }
 
 Message::~Message() {
