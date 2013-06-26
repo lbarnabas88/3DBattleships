@@ -65,6 +65,17 @@ Pair<int> GameModel::addShipToModel(std::string type, int x, int y, int z) {
 	return Pair<int>(3, -1);
 }
 
+bool GameModel::isValidShip(int id) {
+	Ship* hajo = nullptr;
+	for (Ship* s : pModel->getShips()) {
+		if (s->getId() == id)
+			hajo = s;
+	}
+	if (hajo == nullptr)
+		return false;
+	return pModel->isValidShip(hajo);
+}
+
 Pair<int> GameModel::editShip(int id, int x, int y, int z) {
 	Ship* hajo = nullptr;
 	for (Ship* s : pModel->getShips()) {

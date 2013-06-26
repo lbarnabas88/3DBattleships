@@ -81,7 +81,12 @@ public:
 
 	vector<Ship> getCollection();
 	void setListener(GameModelListener *g);
+
+	bool isValidShip(int id);
+
 };
+
+
 
 extern GameModel& GameModelSingleton;
 

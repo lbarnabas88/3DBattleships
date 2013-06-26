@@ -57,12 +57,11 @@ void PhysicsModel::destroy() {
 	}
 }
 
-int PhysicsModel::getShipWithPosition(int x, int y, int z){
-	if(cubeMy[x][y][z]->getHajo()==nullptr)
+int PhysicsModel::getShipWithPosition(int x, int y, int z) {
+	if (cubeMy[x][y][z]->getHajo() == nullptr)
 		return cubeMy[x][y][z]->getHajo()->getId();
 	return -1;
 }
-
 
 /**
  * hajó hozzáadása a modelhez
@@ -76,10 +75,15 @@ int PhysicsModel::getShipWithPosition(int x, int y, int z){
  * 		- 2 : pályán kívül
  */
 Pair<int> PhysicsModel::addShip(Ship *s, int x, int y, int z) {
+	int code = 0, data = -1;
+	s->setPx(x);
+	s->setPy(y);
+	s->setPz(z);
 	if (!s->isNew()) {
 		return Pair<int>(1, -1);	// ha már létező hajó
 	}
 	myShips.push_back(s);
+	myShipsAll.push_back(s);
 	vector<vector<int> > structure = s->getStructure();
 	for (unsigned int i = 0; i < structure.size(); i++) {
 		for (unsigned int j = 0; j < structure[i].size(); j++) {
@@ -87,33 +91,57 @@ Pair<int> PhysicsModel::addShip(Ship *s, int x, int y, int z) {
 				if ((x + i >= cubeMy.size()) || (y + k >= cubeMy[x + i].size())
 						|| (z + j >= cubeMy[x + i][y + k].size()) || (x + i < 0)
 						|| (y + k < 0) || (z + j < 0)) {
-					return Pair<int>(2, -1);		// ha kilóg a pályáról
+					code = -1;		// ha kilóg a pályáról
+				} else {
+					cubeMy[x + i][y + k][z + j]->setShip(s);
+					s->addField(cubeMy[x + i][y + k][z + j]);
 				}
-				cubeMy[x + i][y + k][z + j]->setShip(s);
-				s->addField(cubeMy[x + i][y + k][z + j]);
+			}
+		}
+	}
+	return Pair<int>(code, s->getId());	// ok
+}
+
+Pair<int> PhysicsModel::editShip(Ship* s, int x, int y, int z) {
+	int code = 0;
+	s->setPx(x);
+	s->setPy(y);
+	s->setPz(z);
+	vector<vector<int> > structure = s->getStructure();
+	s->resetField();
+	for (unsigned int i = 0; i < structure.size(); i++) {
+		for (unsigned int j = 0; j < structure[i].size(); j++) {
+			for (int k = 0; k < structure[i][j]; k++) {
+				if ((x + i >= cubeMy.size()) || (y + k >= cubeMy[x + i].size())
+						|| (z + j >= cubeMy[x + i][y + k].size()) || (x + i < 0)
+						|| (y + k < 0) || (z + j < 0)) {
+					code = -1;		// ha kilóg a pályáról
+				} else {
+					cubeMy[x + i][y + k][z + j]->setShip(s);
+					s->addField(cubeMy[x + i][y + k][z + j]);
+				}
 			}
 		}
 	}
 	return Pair<int>(0, s->getId());	// ok
 }
 
-Pair<int> PhysicsModel::editShip(Ship* s, int x, int y, int z){
-		vector<vector<int> > structure = s->getStructure();
-		s->resetField();
-		for (unsigned int i = 0; i < structure.size(); i++) {
-			for (unsigned int j = 0; j < structure[i].size(); j++) {
-				for (int k = 0; k < structure[i][j]; k++) {
-					if ((x + i >= cubeMy.size()) || (y + k >= cubeMy[x + i].size())
-							|| (z + j >= cubeMy[x + i][y + k].size()) || (x + i < 0)
-							|| (y + k < 0) || (z + j < 0)) {
-						return Pair<int>(2, -1);		// ha kilóg a pályáról
-					}
-					cubeMy[x + i][y + k][z + j]->setShip(s);
-					s->addField(cubeMy[x + i][y + k][z + j]);
+bool PhysicsModel::isValidShip(Ship* s) {
+	int x = s->getPx(), y = s->getPy(), z = s->getPz();
+	vector<vector<int> > structure = s->getStructure();
+
+	for (unsigned int i = 0; i < structure.size(); i++) {
+		for (unsigned int j = 0; j < structure[i].size(); j++) {
+			for (int k = 0; k < structure[i][j]; k++) {
+				if ((x + i >= cubeMy.size()) || (y + k >= cubeMy[x + i].size())
+						|| (z + j >= cubeMy[x + i][y + k].size()) || (x + i < 0)
+						|| (y + k < 0) || (z + j < 0)) {
+					return false;		// ha kilóg a pályáról
 				}
 			}
 		}
-		return Pair<int>(0, s->getId());	// ok
+	}
+	return true;
 }
 
 void PhysicsModel::addBomb(int _x, int _y, int _z) {
@@ -131,7 +159,7 @@ bool PhysicsModel::fire(Message &m) {
 	}
 	//INFO ha 6os v. 7es akkor én lőttem
 	else if (m.getMsgType() == FIREOK || m.getMsgType() == FIREBAD) {
-		//	addBomb(m.getPosX(), m.getPosY(), m.getPosZ());
+		addBomb(m.getPosX(), m.getPosY(), m.getPosZ());
 	}
 	return false;
 }
@@ -141,12 +169,9 @@ bool PhysicsModel::idead() {
 }
 
 bool PhysicsModel::check() {
-
 	for (int i = myShips.size() - 1; i >= 0; i--) {
 		if (myShips[i]->isDead()) {
-			Ship* s = myShips[i];
 			myShips.erase(myShips.begin() + i);
-			delete s;
 		}
 	}
 	return false;

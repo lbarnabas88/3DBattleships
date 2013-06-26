@@ -122,5 +122,27 @@ void Ship::resetField() {
 	}
 	mezok.resize(0);
 }
+int Ship::getPx() {
+	return px;
+}
 
+void Ship::setPx(int px) {
+	this->px = px;
+}
+
+int Ship::getPy() {
+	return py;
+}
+
+void Ship::setPy(int py) {
+	this->py = py;
+}
+
+int Ship::getPz() {
+	return pz;
+}
+
+void Ship::setPz(int pz) {
+	this->pz = pz;
+}
 } /* namespace AstrOWar */

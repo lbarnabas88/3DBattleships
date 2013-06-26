@@ -28,6 +28,7 @@ protected:
 	std::string name;
 	int id;
 	int x, y, z;		// mátrix segédek
+	int px, py, pz;		// positions
 	int type;
 	int max;
 	std::string mesh;
@@ -64,6 +65,13 @@ public:
 	void resetField();
 	Ship* clone(int id);
 	void toString();
+
+	int getPx();
+	void setPx(int px);
+	int getPy();
+	void setPy(int py);
+	int getPz();
+	void setPz(int pz);
 };
 
 } /* namespace AstrOWar */
