@@ -13,6 +13,7 @@
 #include "../shiplist/ShipListController.hpp"
 #include "GameControlListener.hpp"
 #include "../model/models/GameModelListener.h"
+#include "../model/elements/Ship.h"
 
 class GameControl: public GameControlProvider, public ShipListControllerDataProvider, public AstrOWar::GameModelListener
 {
@@ -59,7 +60,7 @@ public:
 	/*
 	 * lövés esetén x,y,z koordináták, true ha sikeres, false ha nem
 	 */
-	virtual void onFireEvent(int x, int y, int z, bool damaged, bool sunken);
+	virtual void onFireEvent(int x, int y, int z, bool damaged, bool sunken, AstrOWar::Ship*);
 	/*
 	 * találat esetén: x,y,z koordináták, és true ha sikeres, false ha nem
 	 */

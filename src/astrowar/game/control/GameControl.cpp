@@ -266,7 +266,7 @@ void GameControl::setListener(GameControlListener* listener)
 /*
  * lövés esetén x,y,z koordináták, true ha sikeres, false ha nem
  */
-void GameControl::onFireEvent(int x, int y, int z, bool damaged, bool sunken)
+void GameControl::onFireEvent(int x, int y, int z, bool damaged, bool sunken, AstrOWar::Ship* ship)
 {
 	// Set player
 	setPlayer(1);
@@ -280,7 +280,9 @@ void GameControl::onFireEvent(int x, int y, int z, bool damaged, bool sunken)
 	if (result.isSink)
 	{
 		// TODO ship details from network
-		result.isSink = false;
+		result.ship.type = ship->getName();
+		result.ship.orientation = 0;
+		result.ship.coords = std::vector<size_t>( { (size_t) ship->getPx(), (size_t) ship->getPy(), (size_t) ship->getPz() });
 	}
 	// Call listener
 	onShot(result);
