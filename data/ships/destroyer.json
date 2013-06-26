@@ -1,6 +1,6 @@
 {
 	"name" : "Destroyer",
-	"max": 1,
+	"max": 2,
 	"type" : 2,
 	"size" : {
 		"x" : 1,
