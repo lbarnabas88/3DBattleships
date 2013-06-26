@@ -91,8 +91,6 @@ ShipHull* GameControl::createShip(Grid3D* grid, std::vector<size_t> coords, std:
 	auto ship = mShipyard.createShip(type, grid);
 	if (ship)
 	{
-		moveShipTo(ship, coords);
-		onShipCreated();
 		// Model
 		if (getGamePhase() == GP_SET)
 		{
@@ -100,6 +98,8 @@ ShipHull* GameControl::createShip(Grid3D* grid, std::vector<size_t> coords, std:
 			addShip(result.resume, ship);
 			cout << "Add Ship ErrCode: " << result.errorCode << endl;
 		}
+		moveShipTo(ship, coords);
+		onShipCreated();
 	}
 	return ship;
 }
