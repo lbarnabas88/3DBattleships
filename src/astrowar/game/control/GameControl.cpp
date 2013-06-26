@@ -23,14 +23,6 @@
 GameControl::GameControl(Ogre::SceneManager* sceneManager) :
 		mShipyard(sceneManager), mSelectedShip(NULL), mListener(NULL), mPrevReady(false), mPhase(GP_SET), mPlayer(0)
 {
-	// Init shipyard
-	/*	mShipyard.registerShipType("Destroyer", { "Destroyer.mesh" });
-	 mShipyard.registerShipType("Cruiser", { "Cruiser.mesh" });
-	 mShipyard.registerShipType("Battleship", { "Battleship.mesh" });
-	 mShipyard.registerShipType("Station", { "Station.mesh" });
-	 mShipyard.registerShipType("Carrier", { "Carrier.mesh" });
-	 */
-
 	for (auto i : AstrOWar::GameModelSingleton.getCollection())
 	{
 		mShipyard.registerShipType(i.getName(), { i.getMesh() });
@@ -94,7 +86,9 @@ ShipHull* GameControl::createShip(Grid3D* grid, std::vector<size_t> coords, std:
 	if (type == "")
 		mShipNumbers[ship_index]--;
 	// Get which type need to be made
-	auto ship = mShipyard.createShip(type == "" ? mShipyard.getNameOfShipType(ship_index) : type, grid);
+	if (type == "")
+		type = mShipyard.getNameOfShipType(ship_index);
+	auto ship = mShipyard.createShip(type, grid);
 	if (ship)
 	{
 		moveShipTo(ship, coords);
@@ -104,6 +98,7 @@ ShipHull* GameControl::createShip(Grid3D* grid, std::vector<size_t> coords, std:
 		{
 			auto result = AstrOWar::GameModelSingleton.addShipToModel(type, coords[0], coords[1], coords[2]);
 			addShip(result.resume, ship);
+			cout << "Add Ship ErrCode: " << result.errorCode << endl;
 		}
 	}
 	return ship;
@@ -348,11 +343,10 @@ void GameControl::onNetworkEvent(bool success)
 // Check if ship is on a valid position
 bool GameControl::isShipValid(ShipHull* ship)
 {
-	return true;
-//	auto id = getIdForShip(ship);
-//	if (id < 0)
-//		return false;
-//	return AstrOWar::GameModelSingleton.isValidShip(id);
+	auto id = getIdForShip(ship);
+	if (id < 0)
+		return false;
+	return AstrOWar::GameModelSingleton.isValidShip(id);
 }
 
 // Color shipt to correct color
