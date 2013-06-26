@@ -96,7 +96,7 @@ private:
 	void onShipCreated();
 	void onBattleStart();
 	void onBattleEnd(int winnerPlayer);
-	// TODO onEnemyFire(...)
+	void onEnemyShot(FireResult fireResult);
 	bool mPrevReady;
 	// Game Phase
 	GameControlProvider::GamePhase mPhase;

@@ -399,3 +399,9 @@ void GameControl::onBattleEnd(int winnerPlayer)
 	if (mListener)
 		mListener->onBattleEnd(winnerPlayer);
 }
+
+void GameControl::onEnemyShot(FireResult fireResult)
+{
+	if (mListener)
+		mListener->onEnemyShot(fireResult);
+}
