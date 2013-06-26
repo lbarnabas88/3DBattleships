@@ -62,7 +62,7 @@ bool GameControl::isSetReady()
 	if (sum != 0)
 		return false;
 	for (auto& ship : mShips)
-		if (isShipValid(ship.hull))
+		if (checkShip(ship.hull))
 			return false;
 	return true;
 }
@@ -357,14 +357,16 @@ bool GameControl::isShipValid(ShipHull* ship)
 }
 
 // Color shipt to correct color
-void GameControl::checkShip(ShipHull* ship)
+bool GameControl::checkShip(ShipHull* ship)
 {
 	// If ship NULL to nothing
 	if (!ship)
-		return;
+		return false;
+	// Result
+	bool ok = isShipValid(ship);
 	// Color ship
 	ShipHull::ShipColor ship_color = ShipHull::SCLR_DEFAULT;
-	if (isShipValid(ship))
+	if (ok)
 	{
 		if (mSelectedShip == ship)
 			ship_color = ShipHull::SCLR_CYAN;
@@ -386,6 +388,7 @@ void GameControl::checkShip(ShipHull* ship)
 	if (!act_ready && mPrevReady)
 		onSetCancel();
 	mPrevReady = act_ready;
+	return ok;
 }
 
 void GameControl::colorOnSelection(ShipHull* ship)

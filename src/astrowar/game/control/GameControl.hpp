@@ -85,7 +85,7 @@ private:
 	// Check if ship is on a valid position
 	bool isShipValid(ShipHull* ship);
 	// Color shipt to correct color
-	void checkShip(ShipHull* ship);
+	bool checkShip(ShipHull* ship);
 	void colorOnSelection(ShipHull* ship);
 	// Ship source
 	Shipyard mShipyard;
