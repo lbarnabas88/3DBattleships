@@ -432,7 +432,7 @@ void GameControl::onBattleStart()
 	mShipNumbers = mInitShipNumbers;
 	if (mListener)
 		mListener->onBattleStart();
-	onPlayerChange(mPlayer, 1 - mPlayer);
+	setPlayer(mPlayer);
 }
 
 void GameControl::onBattleEnd(int winnerPlayer)
