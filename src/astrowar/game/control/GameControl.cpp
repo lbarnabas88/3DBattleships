@@ -13,6 +13,9 @@
 // ECHO
 #include "../../../tools/echoes.hpp"
 
+#include "../model/elements/Ship.h"
+#include "../model/models/GameModel.h"
+
 //****************************************
 //*** Game Control
 //****************************************
