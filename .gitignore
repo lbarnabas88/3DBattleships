@@ -9,6 +9,7 @@ Release/
 *.log
 # Config
 config/ogre.cfg
+config/plugins/RenderSystem*
 # Eclipse stuff
 .project
 .cproject

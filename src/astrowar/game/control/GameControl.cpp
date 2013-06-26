@@ -23,14 +23,6 @@
 GameControl::GameControl(Ogre::SceneManager* sceneManager) :
 		mShipyard(sceneManager), mSelectedShip(NULL), mListener(NULL), mPrevReady(false), mPhase(GP_SET), mPlayer(0)
 {
-	// Init shipyard
-	/*	mShipyard.registerShipType("Destroyer", { "Destroyer.mesh" });
-	 mShipyard.registerShipType("Cruiser", { "Cruiser.mesh" });
-	 mShipyard.registerShipType("Battleship", { "Battleship.mesh" });
-	 mShipyard.registerShipType("Station", { "Station.mesh" });
-	 mShipyard.registerShipType("Carrier", { "Carrier.mesh" });
-	 */
-
 	for (auto i : AstrOWar::GameModelSingleton.getCollection())
 	{
 		mShipyard.registerShipType(i.getName(), { i.getMesh() });
@@ -348,11 +340,10 @@ void GameControl::onNetworkEvent(bool success)
 // Check if ship is on a valid position
 bool GameControl::isShipValid(ShipHull* ship)
 {
-	return true;
-//	auto id = getIdForShip(ship);
-//	if (id < 0)
-//		return false;
-//	return AstrOWar::GameModelSingleton.isValidShip(id);
+	auto id = getIdForShip(ship);
+	if (id < 0)
+		return false;
+	return AstrOWar::GameModelSingleton.isValidShip(id);
 }
 
 // Color shipt to correct color
