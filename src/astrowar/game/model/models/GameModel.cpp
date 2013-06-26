@@ -152,10 +152,13 @@ void GameModel::messageEventHandlerBAD(Message &m) {
 void GameModel::messageEventHandlerFIRE(Message &m) {
 	//INFO	ő volt e soron
 	if (!isYourNext()) {
+		cout<<"fire init"<<endl;
 		//INFO valid e az utasítás
 		if (m.validate(pModel->getDimension())) {
+			cout<<"fire validate"<<endl;
 			//INFO utasítás végrehajtása
 			if (pModel->fire(m)) {
+				cout<<"fire fire"<<endl;
 				//INFO eredmény alapján FIREOK
 				if (pModel->checkShip(m)) {
 					Ship* s = pModel->getShipObjectWithPosition(m.getPosX(),
@@ -266,30 +269,39 @@ void GameModel::messageEventHandler(std::string encodedString) {
 	if (m.validate()) {
 		switch (m.getMsgType()) {
 		case HELLO:
+			cout<<"HELLO"<<endl;
 			messageEventHandlerHELLO(m);
 			break;
 		case OK:
+			cout<<"OK"<<endl;
 			messageEventHandlerOK(m);
 			break;
 		case BAD:
+			cout<<"BAD"<<endl;
 			messageEventHandlerBAD(m);
 			break;
 		case FIRE:
+			cout<<"FIRE"<<endl;
 			messageEventHandlerFIRE(m);
 			break;
 		case IMDIED:
+			cout<<"IMDIED"<<endl;
 			messageEventHandlerIMDIED(m);
 			break;
 		case FIREOK:
+			cout<<"FIREOK"<<endl;
 			messageEventHandlerFIREOK(m);
 			break;
 		case FIREBAD:
+			cout<<"FIREBAD"<<endl;
 			messageEventHandlerFIREBAD(m);
 			break;
 		case FIRESUCESS:
+			cout<<"FIRESUCESS"<<endl;
 			messageEventHandlerFIRESUCESS(m);
 			break;
 		case EXIT:
+			cout<<"EXIT"<<endl;
 			messageEventHandlerEXIT(m);
 			break;
 		}

@@ -16,7 +16,6 @@
 #include "../elements/Message.h"
 #include "../../../../tools/json/Parser.h"
 #include "GameModelListener.h"
-#include <list>
 
 using namespace std;
 

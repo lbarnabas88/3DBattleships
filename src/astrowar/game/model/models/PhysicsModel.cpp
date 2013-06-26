@@ -104,7 +104,8 @@ Ship* PhysicsModel::getShipObjectWithPosition(int x, int y, int z) {
  * 		- 2 : pályán kívül
  */
 Pair<int> PhysicsModel::addShip(Ship *s, int x, int y, int z) {
-	int code = 0, data = -1;
+	int code = 0;
+	cout << x << " " << y << " " << z << endl;
 	s->setPx(x);
 	s->setPy(y);
 	s->setPz(z);
@@ -184,6 +185,10 @@ size_t PhysicsModel::getDimension() {
 bool PhysicsModel::fire(Message &m) {
 	//INFO ha 4es akkor rám lőttek
 	if (m.getMsgType() == FIRE) {
+		cout << "*******" << endl;
+		cout << m.getPosX() << " " << m.getPosY() << " " << m.getPosZ() << endl;
+		cout << cubeMy[m.getPosX()][m.getPosY()][m.getPosZ()]->toString()
+				<< endl;
 		return cubeMy[m.getPosX()][m.getPosY()][m.getPosZ()]->fire();
 	}
 	//INFO ha 6os v. 7es akkor én lőttem
