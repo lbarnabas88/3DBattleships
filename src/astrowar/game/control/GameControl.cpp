@@ -279,8 +279,8 @@ void GameControl::onFireEvent(int x, int y, int z, bool damaged, bool sunken, As
 		echo("second");
 		result.ship.orientation = 0;
 		result.ship.coords = std::vector<size_t>( { (size_t) ship->getPx(), (size_t) ship->getPy(), (size_t) ship->getPz() });
-		result.sunkenShip = NULL;
 	}
+	result.sunkenShip = NULL;
 	// Call listener
 	onShot(result);
 }
@@ -315,7 +315,7 @@ void GameControl::onHitEvent(int x, int y, int z, bool damaged, bool sunken)
  */
 void GameControl::onDeadEvent(bool won)
 {
-	onBattleEnd(won ? 0 : 1);
+	onBattleEnd(won ? 1 : 0);
 }
 /*
  * játékos kilépése esetén
