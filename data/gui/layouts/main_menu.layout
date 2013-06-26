@@ -5,12 +5,12 @@
 		<Window Name="MainMenu/Menu" Type="DefaultWindow">
 			<Property Name="UnifiedAreaRect" Value="{{0.6,0},{0.5,0},{0.9,0},{0.9,0}}" />
 			<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
-			<Window Name="MainMenu/Menu/SingleplayerButton" Type="TaharezLook/Button">
+			<!-- <Window Name="MainMenu/Menu/SingleplayerButton" Type="TaharezLook/Button">
 				<Property Name="UnifiedAreaRect" Value="{{0,0},{-0.175,-1},{0.9,0},{-0.025,-1}}" />
 				<Property Name="Text" Value="@mainmenu.singleplayer" />
 				<Property Name="VerticalAlignment" Value="Centre" />
 				<Property Name="HorizontalAlignment" Value="Centre" />
-			</Window>
+			</Window> -->
 			<Window Name="MainMenu/Menu/MultiplayerButton" Type="TaharezLook/Button">
 				<Property Name="UnifiedAreaRect" Value="{{0,0},{0,0},{0.9,2},{0.15,0}}" />
 				<Property Name="Text" Value="@mainmenu.multiplayer" />

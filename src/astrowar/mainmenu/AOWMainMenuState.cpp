@@ -15,7 +15,7 @@
 using namespace std;
 
 AOWMainMenuState::AOWMainMenuState() :
-		OgreState("AstrOWarMainMenuState"), mThreadShouldEnd(false), mSocketConnected(false), mShouldStartGame(false)
+		OgreState("AstrOWarMainMenuState"), mThreadShouldEnd(false), mIsServer(false), mSocketConnected(false), mShouldStartGame(false)
 {
 	// Skybox
 	mSceneManager->setSkyBox(true, "Astrowar/SpaceSkyBox");
@@ -31,7 +31,7 @@ bool AOWMainMenuState::frameRenderingQueued(const Ogre::FrameEvent& evt)
 	if (mShouldStartGame)
 	{
 		mShouldStartGame = false;
-		pushState(app::State::Ptr(new GameState(mSocketConnected ? &mSocket : NULL)));
+		pushState(app::State::Ptr(new GameState(mSocketConnected ? &mSocket : NULL, mIsServer)));
 	}
 	return true;
 }
@@ -82,9 +82,6 @@ void AOWMainMenuState::onActivate()
 		onePlayerButton->subscribeEvent(CEGUI::PushButton::EventClicked, CEGUI::Event::Subscriber(&AOWMainMenuState::onePlayerButtonHandler, this));
 	// Add as frame listener
 	OgreFrameworkSingleton.getRoot()->addFrameListener(this);
-	// Start single
-	mShouldStartGame = true;
-	mSocketConnected = false;
 }
 
 void AOWMainMenuState::onDeactivate()
@@ -150,6 +147,7 @@ void AOWMainMenuState::startAsServer(unsigned short port)
 	mNetworkThread.reset(new sf::Thread(&AOWMainMenuState::listenForClient, this));
 	mAddress.second = port;
 	mNetworkThread->launch();
+	mIsServer = true;
 }
 
 void AOWMainMenuState::startAsClient(std::string address, unsigned short port)
@@ -158,6 +156,7 @@ void AOWMainMenuState::startAsClient(std::string address, unsigned short port)
 	mAddress.first = address;
 	mAddress.second = port;
 	mNetworkThread->launch();
+	mIsServer = false;
 }
 
 void AOWMainMenuState::listenForClient()

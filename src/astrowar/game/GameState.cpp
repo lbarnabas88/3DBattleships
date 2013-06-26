@@ -14,19 +14,27 @@
 #include "../../graphics/Cegui/CeguiTranslator.hpp"
 // Utils
 #include "../../tools/echoes.hpp"
+// Game
+#include "model/models/GameModel.h"
 
 using namespace std;
 using namespace Ogre;
 using namespace CEGUI;
 
-GameState::GameState(sf::Socket* connectedPlayerSocket) :
-		OgreState("GameState"), mCamera(NULL), mCameraNode(NULL), mIsCameraMoving(false), mNetPlayerSocket(connectedPlayerSocket), mControl(NULL), mCoordinator(NULL)
+GameState::GameState(sf::TcpSocket* connectedPlayerSocket, bool isServer) :
+		OgreState("GameState"), mCamera(NULL), mCameraNode(NULL), mIsCameraMoving(false), mNetPlayerSocket(connectedPlayerSocket), mControl(NULL), mCoordinator(
+				NULL)
 {
 	// Create light
 	Light* l = mSceneManager->createLight("MainLight");
 	l->setPosition(1, 3, 4);
 	// Skybox
 	mSceneManager->setSkyBox(true, "Astrowar/SpaceSkyBox");
+	// Set socket to model
+	AstrOWar::GameModelSingleton.setSocket(mNetPlayerSocket, isServer);
+	// Start
+	if (isServer)
+		AstrOWar::GameModelSingleton.start();
 }
 
 GameState::~GameState()
@@ -108,6 +116,7 @@ void GameState::onActivate()
 //	mCoordinator->setListener(this);
 	mCoordinator->connectToCameraNode(mCameraNode);
 	mControl->setListener(mCoordinator);
+	AstrOWar::GameModelSingleton.setListener(mControl);
 }
 
 void GameState::onDeactivate()
