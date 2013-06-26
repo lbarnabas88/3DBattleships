@@ -274,10 +274,10 @@ void GameControl::onFireEvent(int x, int y, int z, bool damaged, bool sunken, As
 	result.isSink = sunken;
 	if (result.isSink)
 	{
-		// TODO ship details from network
 		result.ship.type = ship->getName();
 		result.ship.orientation = 0;
 		result.ship.coords = std::vector<size_t>( { (size_t) ship->getPx(), (size_t) ship->getPy(), (size_t) ship->getPz() });
+		result.sunkenShip = NULL;
 	}
 	// Call listener
 	onShot(result);
