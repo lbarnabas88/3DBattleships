@@ -4,6 +4,7 @@ Debug/
 Release/
 *.exe
 *.o
+*.so*
 # Logs
 *.log
 # Config
@@ -11,4 +12,4 @@ config/ogre.cfg
 # Eclipse stuff
 .project
 .cproject
-*.so*
+
