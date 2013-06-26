@@ -29,11 +29,10 @@ GameControl::GameControl(Ogre::SceneManager* sceneManager) :
 	 */
 
 	for (auto i : AstrOWar::GameModelSingleton.getCollection()) {
-		mShipyard.registerShipType(i.first, { i.second });
+		mShipyard.registerShipType(i.getName(), { i.getMesh() });
+		mShipNumbers.push_back(i.getMax());
 	}
 
-	mShipNumbers =
-	{	1,0,0,0,0};
 	mListSelections[0] = 0;
 	mListSelections[1] = 0;
 	// TODO load from game

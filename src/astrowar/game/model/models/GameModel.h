@@ -76,7 +76,7 @@ public:
 	bool isEnableConnection();
 	void start();
 
-	std::list< std::pair<std::string, std::string> > getCollection();
+	vector<Ship> getCollection();
 };
 
 extern GameModel& GameModelSingleton;

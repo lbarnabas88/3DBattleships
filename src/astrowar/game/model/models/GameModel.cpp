@@ -281,12 +281,8 @@ void GameModel::reset(int i) {
 
 bool GameModel::isEnableConnection(){return nModel->isEnableConnection();}
 
-std::list< std::pair<std::string, std::string> > GameModel::getCollection(){
-	std::list< std::pair<std::string, std::string> > cList;
-	for(Ship s : kollekcio){
-		cList.push_back( std::pair<std::string, std::string>(s.getName(), s.getMesh()) );
-	}
-	return cList;
+vector<Ship> GameModel::getCollection(){
+	return kollekcio;
 }
 
 GameModel& GameModel::getSingleton() {
