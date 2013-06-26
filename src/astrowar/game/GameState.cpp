@@ -117,6 +117,7 @@ void GameState::onActivate()
 	mCoordinator->connectToCameraNode(mCameraNode);
 	mControl->setListener(mCoordinator);
 	AstrOWar::GameModelSingleton.setListener(mControl);
+	AstrOWar::GameModelSingleton.reset(dim);
 }
 
 void GameState::onDeactivate()
