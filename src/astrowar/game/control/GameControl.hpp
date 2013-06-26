@@ -12,8 +12,9 @@
 #include "GameControlProvider.hpp"
 #include "../shiplist/ShipListController.hpp"
 #include "GameControlListener.hpp"
+#include "../model/models/GameModelListener.h"
 
-class GameControl: public GameControlProvider, public ShipListControllerDataProvider
+class GameControl: public GameControlProvider, public ShipListControllerDataProvider, public AstrOWar::GameModelListener
 {
 public:
 	// Create & Destroy
@@ -54,6 +55,27 @@ public:
 	// Self listener
 	GameControlListener* getListener();
 	void setListener(GameControlListener* listener);
+	// Game Model Listener
+	/*
+	 * lövés esetén x,y,z koordináták, true ha sikeres, false ha nem
+	 */
+	virtual void onFireEvent(int x, int y, int z, bool damaged, bool sunken);
+	/*
+	 * találat esetén: x,y,z koordináták, és true ha sikeres, false ha nem
+	 */
+	virtual void onHitEvent(int x, int y, int z, bool damaged, bool sunken);
+	/*
+	 * játékos halála esetén, true ha én, false ha az ellenfél
+	 */
+	virtual void onDeadEvent(bool won);
+	/*
+	 * játékos kilépése esetén
+	 */
+	virtual void onExitEvent();
+	/*
+	 * hiba esetén, hibakóddal
+	 */
+	virtual void onErrorEvent(int error);
 private:
 	// Check if ship is on a valid position
 	bool isShipValid(ShipHull* ship);
@@ -74,12 +96,13 @@ private:
 	void onShipCreated();
 	void onBattleStart();
 	void onBattleEnd(int winnerPlayer);
+	// TODO onEnemyFire(...)
 	bool mPrevReady;
 	// Game Phase
 	GameControlProvider::GamePhase mPhase;
-
-	// TEST
+	// Ship numbers
 	std::vector<size_t> mShipNumbers;
+	std::vector<size_t> mInitShipNumbers;
 	int mPlayer;
 };
 

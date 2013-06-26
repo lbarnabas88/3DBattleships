@@ -18,6 +18,7 @@ using namespace std;
 #include "graphics/utils/OisCeguiInputListener.hpp"
 #include "astrowar/settings/AstrOWarInitHelper.hpp"
 #include "astrowar/mainmenu/AOWMainMenuState.hpp"
+#include "astrowar/game/model/models/GameModel.h"
 
 ostream& operator <<(ostream& out, const OIS::Axis& axis)
 {
@@ -175,6 +176,8 @@ int main(int argc, char** argv)
 		cout << GameSettingsSingleton.getLanguage().textForCode("main.helloworld") << endl;
 	else
 	{
+		// Init Game Logic
+		AstrOWar::GameModelSingleton.init();
 //		InputDumpListener dumpListener;
 		{ // Init with Inithelper
 			AstrOWarInitHelper astrowarInitHelper;
