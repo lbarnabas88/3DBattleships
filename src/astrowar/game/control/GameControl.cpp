@@ -277,8 +277,8 @@ void GameControl::onFireEvent(int x, int y, int z, bool damaged, bool sunken, As
 		result.ship.type = ship->getName();
 		result.ship.orientation = 0;
 		result.ship.coords = std::vector<size_t>( { (size_t) ship->getPx(), (size_t) ship->getPy(), (size_t) ship->getPz() });
-		result.sunkenShip = NULL;
 	}
+	result.sunkenShip = NULL;
 	// Call listener
 	onShot(result);
 }
