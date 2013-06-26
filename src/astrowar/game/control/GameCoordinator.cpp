@@ -8,6 +8,7 @@
 #include "GameCoordinator.hpp"
 // Framework
 #include "../../../graphics/Ois/OisFramework.hpp"
+#include "../../../graphics/Ogre/OgreFramework.hpp"
 // Game Settings
 #include "../../../game/settings/GameSettings.hpp"
 // CEGUI
@@ -27,11 +28,14 @@ GameCoordinator::GameCoordinator() :
 	// Set player nums
 	for (int i = 0; i < 2; ++i)
 		mShipControllers[i].setPlayer(i);
+	// Ogre Listener
+	OgreFrameworkSingleton.getRoot()->addFrameListener(this);
 }
 
 GameCoordinator::~GameCoordinator()
 {
 	OisFrameworkSingleton.removeKeyListener(this);
+	OgreFrameworkSingleton.getRoot()->removeFrameListener(this);
 }
 
 void GameCoordinator::connectToGrids(Grid3D* gridA, Grid3D* gridB)
