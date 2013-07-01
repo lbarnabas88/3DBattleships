@@ -174,7 +174,7 @@
 				<Property Name="UnifiedMaxSize" Value="{{1,0},{1,0}}" />
 				<Window Name="MainMenu/ClientPanel/ServerUrl" Type="TaharezLook/Editbox">
 					<Property Name="UnifiedAreaRect" Value="{{0.15,0},{0.1,0},{0.75,0},{0.25,0}}" />
-					<Property Name="Text" Value="192.168.254.134" />
+					<Property Name="Text" Value="localhost" />
 					<Property Name="HorizontalAlignment" Value="Centre" />
 				</Window>
 				<Window Name="MainMenu/ClientPanel/Port" Type="TaharezLook/Spinner">
